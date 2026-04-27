@@ -328,12 +328,16 @@ function Start-ZaloInstance {
     $storageJsonPath = Join-Path $zaloDataPath "storage.json"
     $deviceId = [System.Guid]::NewGuid().ToString().ToUpper() # UUID format
     $storageContent = '{"deviceId":"' + $deviceId + '"}'
-    $storageContent | Set-Content $storageJsonPath -Force -Encoding UTF8
+    
+    # Sử dụng UTF8 không BOM để tránh lỗi JavaScript parse JSON
+    $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+    [System.IO.File]::WriteAllText($storageJsonPath, $storageContent, $utf8NoBom)
 
     # 3. Tạo file config.json cơ bản nếu chưa có để ép Zalo nhận diện mới
     $configPath = Join-Path $zaloDataPath "config.json"
     if (-not (Test-Path $configPath)) {
-        '{"zalo_installed":' + $timestamp + '}' | Set-Content $configPath -Force -Encoding UTF8
+        $configContent = '{"zalo_installed":' + $timestamp + '}'
+        [System.IO.File]::WriteAllText($configPath, $configContent, $utf8NoBom)
     }
 
     $processInfo = New-Object System.Diagnostics.ProcessStartInfo
@@ -567,5 +571,5 @@ for ($i=0; $i -lt $allArgs.Count; $i++) {
 
 # Chạy ứng dụng
 Update-AppUIList
-$Global:TxtVersion.Text = Get-LicenseInfo
+$Global:TxtVersion.Text = "Phiên bản 7x7=59"
 $Global:window.ShowDialog() | Out-Null
