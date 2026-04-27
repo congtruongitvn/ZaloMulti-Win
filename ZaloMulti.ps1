@@ -33,7 +33,7 @@ $CustomPathFile = Join-Path $Global:AppPath "custom_path.txt"
 
 # Tải hoặc hỏi đường dẫn tùy chỉnh
 if (Test-Path $CustomPathFile) {
-    $CustomPath = (Get-Content $CustomPathFile -Raw).Trim()
+    $CustomPath = (Get-Content $CustomPathFile -Raw -Encoding UTF8).Trim()
     if ($CustomPath) { $Global:ProfileRoot = $CustomPath }
 } else {
     # Lần đầu chạy hoặc thiếu cấu hình: Hỏi người dùng
@@ -48,13 +48,13 @@ if (Test-Path $CustomPathFile) {
         
         if ($browser.ShowDialog() -eq "OK") {
             $Global:ProfileRoot = Join-Path $browser.SelectedPath "Zalo_Clone_Profiles"
-            $Global:ProfileRoot | Set-Content $CustomPathFile -Force
+            $Global:ProfileRoot | Set-Content $CustomPathFile -Force -Encoding UTF8
         } else {
             # Người dùng hủy, sử dụng mặc định nhưng chưa lưu file để lần sau hỏi lại
         }
     } else {
         # Người dùng chọn mặc định, lưu lại để không hỏi lại lần sau
-        $Global:ProfileRoot | Set-Content $CustomPathFile -Force
+        $Global:ProfileRoot | Set-Content $CustomPathFile -Force -Encoding UTF8
     }
 }
 
@@ -89,7 +89,7 @@ try {
 }
 
 # Tải và nạp XAML (Đường dẫn Font động để đảm bảo tính di động)
-$xamlRaw = Get-Content (Join-Path $Global:AppPath "ZaloMulti.xaml") -Raw
+$xamlRaw = Get-Content (Join-Path $Global:AppPath "ZaloMulti.xaml") -Raw -Encoding UTF8
 $xamlRaw = $xamlRaw.Replace("__FONT_PATH__", $Global:FontPath)
 
 [xml]$xamlContent = $xamlRaw
@@ -253,7 +253,7 @@ function Update-AppUIList {
         $profileDir = $p.FullName
         $phonePath = Join-Path $profileDir "phone.txt"
         $currentPhone = "Nhập số ĐT tài khoản này"
-        if (Test-Path $phonePath) { $currentPhone = (Get-Content $phonePath -Raw).Trim() }
+        if (Test-Path $phonePath) { $currentPhone = (Get-Content $phonePath -Raw -Encoding UTF8).Trim() }
 
         $border = New-Object System.Windows.Controls.Border
         $border.SetResourceReference([System.Windows.Controls.Border]::BackgroundProperty, "BgCard")
@@ -353,7 +353,7 @@ function Update-AppUIList {
         $phoneBox.Add_LostFocus({
             $val = $this.Text.Trim()
             $path = Join-Path $this.Tag "phone.txt"
-            $val | Set-Content $path -Force | Out-Null
+            $val | Set-Content $path -Force -Encoding UTF8 | Out-Null
         })
         
         $grid.Children.Add($phonePrefix)
