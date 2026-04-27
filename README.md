@@ -1,13 +1,24 @@
-# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop (v7x7=59)
+# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop (v1.0.1)
 
 **ZalỏMulti** là một công cụ mạnh mẽ, gọn nhẹ và thẩm mỹ dành cho người dùng Windows, giúp quản lý và chạy đồng thời nhiều tài khoản Zalo Desktop trên cùng một máy tính một cách dễ dàng.
 
-![ZaloMulti UI](Assets/zalo.png)
+<p align="center">
+  <img src="Assets/zalo_01_Do.ico" width="48" height="48" />
+  <img src="Assets/zalo_02_XanhLa.ico" width="48" height="48" />
+  <img src="Assets/zalo_03_Cam.ico" width="48" height="48" />
+  <img src="Assets/zalo_04_Vang.ico" width="48" height="48" />
+  <img src="Assets/zalo_05_Tim.ico" width="48" height="48" />
+  <img src="Assets/zalo_06_Hong.ico" width="48" height="48" />
+  <img src="Assets/zalo_07_XanhDuongDam.ico" width="48" height="48" />
+  <img src="Assets/zalo_08_XanhNgoc.ico" width="48" height="48" />
+  <img src="Assets/zalo_09_Nau.ico" width="48" height="48" />
+  <img src="Assets/zalo_10_XamBac.ico" width="48" height="48" />
+</p>
 
-## ✨ Tính năng mới (Cập nhật 27/04/2026)
-- **Lưu trạng thái giao diện**: Tự động lưu và khôi phục Chế độ Sáng/Tối cùng màu sắc đã chọn khi khởi động lại ứng dụng.
-- **Sửa lỗi Startup**: Khắc phục hoàn toàn lỗi JavaScript (JSON BOM) khi khởi động Zalo trên một số phiên bản Electron mới.
-- **Tối ưu hóa Desktop**: Cải thiện cơ chế tạo Shortcut nhanh.
+## ✨ Tính năng mới (Cập nhật 28/04/2026 - v1.0.1)
+- **Cập nhật tự động (Auto-Update)**: Hệ thống tự động kiểm tra và thông báo khi có bản vá lỗi hoặc tính năng mới từ GitHub.
+- **Sửa lỗi "Không phản hồi"**: Khắc phục triệt để lỗi nhấn nút "Mở tài khoản" nhưng không có hiện tượng gì xảy ra.
+- **Cải tiến giao diện**: Đưa nút **Tạo lối tắt (🔗)** lên thanh tiêu đề thẻ tài khoản để gọn gàng và dễ thao tác hơn.
 - **GitHub Page**: Đã có trang giới thiệu chuyên nghiệp tại [congtruongitvn.github.io/ZaloMulti](https://congtruongitvn.github.io/ZaloMulti/).
 
 ## ✨ Tính năng nổi bật
@@ -69,10 +80,13 @@ Khi bạn nhấn "Mở tài khoản", ứng dụng sẽ thực hiện:
 - **Thay đổi sau này**: Nếu muốn đổi nơi lưu trữ khác, bạn chỉ cần xóa file `custom_path.txt` trong thư mục ứng dụng và mở lại, ứng dụng sẽ hỏi lại từ đầu.
 
 ## ❓ Giải quyết sự cố (Troubleshooting)
-Nếu bạn không mở được ứng dụng sau khi tải về, hãy kiểm tra:
-1. **Unblock file**: Click chuột phải vào file `.zip` vừa tải về (hoặc thư mục đã giải nén), chọn **Properties**, tick vào ô **Unblock** ở dưới cùng rồi nhấn **OK**.
-2. **Quyền thực thi**: Mở PowerShell với quyền Admin và chạy lệnh: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` sau đó chọn `Y`.
-3. **Zalo Desktop**: Đảm bảo bạn đã cài đặt bản Zalo Desktop chính thức.
+Nếu bạn gặp lỗi trong quá trình sử dụng, hãy thử các cách sau:
+1. **Lỗi ký tự lạ hoặc lỗi cú pháp (Encoding)**: 
+    - Hiện tượng: Script hiện lỗi "Missing closing '}'" hoặc các ký tự `Ã`, `Ä`.
+    - Cách sửa: Mở file `ZaloMulti.ps1` bằng Notepad -> Save As -> Chọn Encoding là **UTF-8 with BOM** -> Lưu đè lên.
+2. **Unblock file**: Click chuột phải vào file `.zip` vừa tải về (hoặc thư mục đã giải nén), chọn **Properties**, tick vào ô **Unblock** ở dưới cùng rồi nhấn **OK**.
+3. **Quyền thực thi**: Mở PowerShell với quyền Admin và chạy lệnh: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` sau đó chọn `Y`.
+4. **Zalo Desktop**: Đảm bảo bạn đã cài đặt bản Zalo Desktop chính thức từ trang chủ.
 
 ## 🤝 Đóng góp & Liên hệ
 Nếu bạn thấy công cụ này hữu ích, hãy để lại một **Star** ⭐ trên GitHub hoặc liên hệ với tôi qua:
