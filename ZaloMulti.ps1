@@ -307,11 +307,22 @@ function Update-AppAccent {
 function New-AppShortcut {
     param($name, $index)
     try {
+        $desktopPath = [Environment]::GetFolderPath("Desktop")
+        $ShortcutPath = Join-Path $desktopPath "$name.lnk"
+        
+        # Để hỗ trợ Pin to Start tốt hơn, chúng ta tạo một file .bat trung gian
+        $batFolder = Join-Path $Global:AppPath "Shortcuts"
+        if (-not (Test-Path $batFolder)) { New-Item -ItemType Directory -Path $batFolder -Force | Out-Null }
+        $batPath = Join-Path $batFolder "$name.bat"
+        
+        $batContent = "@echo off`nstart `"`" powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$($MyInvocation.MyCommand.Definition)`" -LaunchInstance `"$name`""
+        $batContent | Set-Content $batPath -Force -Encoding ASCII
+
         $WshShell = New-Object -ComObject WScript.Shell
-        $ShortcutPath = Join-Path ([Environment]::GetFolderPath("Desktop")) "$name.lnk"
         $Shortcut = $WshShell.CreateShortcut($ShortcutPath)
-        $Shortcut.TargetPath = "powershell.exe"
-        $Shortcut.Arguments = "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""$($MyInvocation.MyCommand.Definition)"" -LaunchInstance ""$name"""
+        $Shortcut.TargetPath = "cmd.exe"
+        $Shortcut.Arguments = "/c `"$batPath`""
+        $Shortcut.WindowStyle = 7 # Minimized
         
         if (Test-Path $Global:IconFolder) {
             $icons = Get-ChildItem $Global:IconFolder -Filter *.ico | Sort-Object Name
@@ -321,7 +332,10 @@ function New-AppShortcut {
             }
         }
         $Shortcut.Save()
-    } catch { }
+        [System.Windows.MessageBox]::Show("Đã tạo lối tắt cho '$name' ngoài Desktop.")
+    } catch {
+        [System.Windows.MessageBox]::Show("Lỗi khi tạo shortcut: $($_.Exception.Message)")
+    }
 }
 
 # Hỗ trợ: Trình khởi chạy Zalo + Fake Device ID
@@ -362,21 +376,17 @@ function Start-ZaloInstance {
 
     $processInfo = New-Object System.Diagnostics.ProcessStartInfo
     $processInfo.FileName = $Global:ZaloPath
-    $processInfo.UseShellExecute = $false
+    $processInfo.UseShellExecute = $true # Thay đổi sang true để Windows xử lý việc tách tiến trình tốt hơn
     $processInfo.EnvironmentVariables["USERPROFILE"] = $profilePath
     $processInfo.EnvironmentVariables["APPDATA"] = $roamingPath
     $processInfo.EnvironmentVariables["LOCALAPPDATA"] = $localPath
+    
+    # Khởi chạy một cách độc lập hoàn toàn
     [System.Diagnostics.Process]::Start($processInfo) | Out-Null
 }
 
 # Làm mới giao diện chính
 function Update-AppUIList {
-    # 1. Clean all existing Zalo shortcuts from Desktop first
-    try {
-        $desktopPath = [Environment]::GetFolderPath("Desktop")
-        Get-ChildItem $desktopPath -Filter "Zalo *.lnk" | Remove-Item -Force -ErrorAction SilentlyContinue
-    } catch {}
-
     $Global:InstanceGrid.Children.Clear()
     $profiles = Get-ChildItem $Global:ProfileRoot | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime
     $count = 0
@@ -506,19 +516,39 @@ function Update-AppUIList {
         $grid.Children.Add($phonePrefix)
         $grid.Children.Add($phoneBox)
 
+        $launchGrid = New-Object System.Windows.Controls.Grid
+        $lgCol1 = New-Object System.Windows.Controls.ColumnDefinition
+        $lgCol1.Width = New-Object System.Windows.GridLength(1, [System.Windows.GridUnitType]::Star)
+        $launchGrid.ColumnDefinitions.Add($lgCol1)
+        $lgCol2 = New-Object System.Windows.Controls.ColumnDefinition
+        $lgCol2.Width = New-Object System.Windows.GridLength(40)
+        $launchGrid.ColumnDefinitions.Add($lgCol2)
+
         $launchBtn = New-Object System.Windows.Controls.Button
         $launchBtn.Content = "MỞ TÀI KHOẢN"
         $launchBtn.Style = $Global:window.Resources["RoundBtn"]
         $launchBtn.Tag = $name
         $launchBtn.Add_Click({ Start-ZaloInstance $this.Tag })
+        [System.Windows.Controls.Grid]::SetColumn($launchBtn, 0)
+
+        $scBtn = New-Object System.Windows.Controls.Button
+        $scBtn.Content = "🔗"
+        $scBtn.ToolTip = "Tạo lối tắt ngoài Desktop"
+        $scBtn.Style = $Global:window.Resources["RoundBtn"]
+        $scBtn.Background = [System.Windows.Media.Brushes]::Transparent
+        $scBtn.BorderThickness = 0
+        $scBtn.Tag = @{ Name = $name; Index = $count - 1 }
+        $scBtn.Add_Click({ New-AppShortcut -name $this.Tag.Name -index $this.Tag.Index })
+        [System.Windows.Controls.Grid]::SetColumn($scBtn, 1)
+
+        $launchGrid.Children.Add($launchBtn)
+        $launchGrid.Children.Add($scBtn)
 
         $cardStack.Children.Add($headerGrid)
         $cardStack.Children.Add($grid)
-        $cardStack.Children.Add($launchBtn)
+        $cardStack.Children.Add($launchGrid)
         $border.Child = $cardStack
         $Global:InstanceGrid.Children.Add($border)
-
-        New-AppShortcut -name "Zalo $count" -index ($count - 1)
     }
 }
 
