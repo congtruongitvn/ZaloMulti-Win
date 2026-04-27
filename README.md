@@ -57,6 +57,10 @@ Khi bạn nhấn "Mở tài khoản", ứng dụng sẽ thực hiện:
 - **Tính bảo mật**: Mọi tin nhắn và dữ liệu cá nhân nằm trong máy tính của bạn. ZalỏMulti không gửi bất kỳ dữ liệu nào ra bên ngoài.
 - **Dọn dẹp**: Nếu bạn xóa ứng dụng, hãy nhớ xóa thư mục dữ liệu thủ công nếu muốn giải phóng dung lượng ổ cứng.
 
+## 💾 Hướng dẫn chọn nơi lưu trữ
+- **Lần đầu khởi chạy**: Ứng dụng sẽ tự động hiển thị thông báo hỏi bạn muốn lưu dữ liệu ở đâu. Bạn có thể nhấn **Yes** để chọn ổ D, E hoặc thư mục bất kỳ, hoặc nhấn **No** để sử dụng mặc định (ổ C).
+- **Thay đổi sau này**: Nếu muốn đổi nơi lưu trữ khác, bạn chỉ cần xóa file `custom_path.txt` trong thư mục ứng dụng và mở lại, ứng dụng sẽ hỏi lại từ đầu.
+
 ## ❓ Giải quyết sự cố (Troubleshooting)
 Nếu bạn không mở được ứng dụng sau khi tải về, hãy kiểm tra:
 1. **Unblock file**: Click chuột phải vào file `.zip` vừa tải về (hoặc thư mục đã giải nén), chọn **Properties**, tick vào ô **Unblock** ở dưới cùng rồi nhấn **OK**.

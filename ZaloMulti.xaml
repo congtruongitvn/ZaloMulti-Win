@@ -5,7 +5,7 @@
         WindowStartupLocation="CenterScreen"
         FontFamily="__FONT_PATH__">
     <Window.Resources>
-        <!-- Design System Tokens (Default Dark) -->
+        <!-- Hệ thống màu sắc (Mặc định Tối) -->
         <SolidColorBrush x:Key="BgDark" Color="#0A0A0A"/>
         <SolidColorBrush x:Key="BgSidebar" Color="#18191A"/>
         <SolidColorBrush x:Key="BgCard" Color="#242526"/>
@@ -18,7 +18,7 @@
         <SolidColorBrush x:Key="AccentGradBrush" Color="#5C7CFF"/>
         <SolidColorBrush x:Key="TextOnAccent" Color="#000000"/>
  
-        <!-- Global Font Fix -->
+        <!-- Sửa lỗi Font toàn cục -->
         <Style TargetType="Control">
             <Setter Property="FontFamily" Value="__FONT_PATH__"/>
         </Style>
@@ -26,7 +26,7 @@
             <Setter Property="FontFamily" Value="__FONT_PATH__"/>
         </Style>
 
-        <!-- Button Styles -->
+        <!-- Định nghĩa kiểu dáng Button -->
         <Style x:Key="ActionBtn" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource TextMain}"/>
@@ -126,7 +126,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Sidebar -->
+            <!-- Thanh bên -->
             <Border Grid.Column="0" Background="{DynamicResource BgSidebar}" CornerRadius="24,0,0,24" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
                 <Grid Margin="25">
                     <StackPanel>
@@ -182,7 +182,7 @@
                 </Grid>
             </Border>
 
-            <!-- Main Content -->
+            <!-- Nội dung chính -->
             <Grid Grid.Column="1" Margin="35">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -203,7 +203,7 @@
                 <Grid Grid.Row="1">
                     <ScrollViewer Name="MainScroll" VerticalScrollBarVisibility="Hidden">
                         <WrapPanel Name="InstanceGrid" ItemWidth="330">
-                            <!-- Dynamic Content Here -->
+                            <!-- Nội dung động sẽ xuất hiện ở đây -->
                         </WrapPanel>
                     </ScrollViewer>
                     

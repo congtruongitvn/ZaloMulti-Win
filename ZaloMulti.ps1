@@ -5,7 +5,7 @@
 
 Add-Type -AssemblyName PresentationFramework, PresentationCore, WindowsBase
 
-# Hide Terminal Window logic
+# Logic ẩn cửa sổ Terminal
 $Win32Code = @"
 using System;
 using System.Runtime.InteropServices;
@@ -22,13 +22,43 @@ if ($consolePtr -ne [IntPtr]::Zero) {
     [Win32]::ShowWindow($consolePtr, 0)
 }
 
-# Global Configuration
+# Cấu hình toàn cầu
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
-$Global:ProfileRoot = "C:\Zalo_Clone_Profiles"
 
-# Robust Zalo Path Detection
+# Đường dẫn mặc định
+$Global:ProfileRoot = "C:\Zalo_Clone_Profiles"
+$CustomPathFile = Join-Path $Global:AppPath "custom_path.txt"
+
+# Tải hoặc hỏi đường dẫn tùy chỉnh
+if (Test-Path $CustomPathFile) {
+    $CustomPath = (Get-Content $CustomPathFile -Raw).Trim()
+    if ($CustomPath) { $Global:ProfileRoot = $CustomPath }
+} else {
+    # Lần đầu chạy hoặc thiếu cấu hình: Hỏi người dùng
+    $msg = "Chào mừng bạn đến với ZalỏMulti!`n`nMặc định dữ liệu sẽ được lưu tại: C:\Zalo_Clone_Profiles`n`nBạn có muốn chọn một thư mục khác (Ví dụ ổ D, E) để lưu dữ liệu không?"
+    $choice = [System.Windows.MessageBox]::Show($msg, "Cấu hình lưu trữ", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Question)
+    
+    if ($choice -eq "Yes") {
+        Add-Type -AssemblyName System.Windows.Forms
+        $browser = New-Object System.Windows.Forms.FolderBrowserDialog
+        $browser.Description = "Chọn thư mục để lưu trữ các tài khoản Zalo Clone"
+        $browser.ShowNewFolderButton = $true
+        
+        if ($browser.ShowDialog() -eq "OK") {
+            $Global:ProfileRoot = Join-Path $browser.SelectedPath "Zalo_Clone_Profiles"
+            $Global:ProfileRoot | Set-Content $CustomPathFile -Force
+        } else {
+            # Người dùng hủy, sử dụng mặc định nhưng chưa lưu file để lần sau hỏi lại
+        }
+    } else {
+        # Người dùng chọn mặc định, lưu lại để không hỏi lại lần sau
+        $Global:ProfileRoot | Set-Content $CustomPathFile -Force
+    }
+}
+
+# Phát hiện đường dẫn Zalo thông minh
 $CommonZaloPaths = @(
     "C:\Users\$($env:USERNAME)\AppData\Local\Programs\Zalo\Zalo.exe",
     "C:\Program Files (x86)\Zalo\Zalo.exe",
@@ -58,7 +88,7 @@ try {
     }
 }
 
-# Load & Patch XAML (Dynamic Font Path for Portability)
+# Tải và nạp XAML (Đường dẫn Font động để đảm bảo tính di động)
 $xamlRaw = Get-Content (Join-Path $Global:AppPath "ZaloMulti.xaml") -Raw
 $xamlRaw = $xamlRaw.Replace("__FONT_PATH__", $Global:FontPath)
 
@@ -66,7 +96,7 @@ $xamlRaw = $xamlRaw.Replace("__FONT_PATH__", $Global:FontPath)
 $reader = New-Object System.Xml.XmlNodeReader $xamlContent
 $Global:window = [Windows.Markup.XamlReader]::Load($reader)
 
-# UI Elements Mapping
+# Ánh xạ các thành phần UI
 $Global:BtnAdd = $Global:window.FindName("BtnAdd")
 $Global:BtnKillAll = $Global:window.FindName("BtnKillAll")
 $Global:InstanceGrid = $Global:window.FindName("InstanceGrid")
@@ -82,7 +112,7 @@ $Global:TxtVersion = $Global:window.FindName("TxtVersion")
 $Global:MainScroll = $Global:window.FindName("MainScroll")
 $Global:BtnToTop = $Global:window.FindName("BtnToTop")
 
-# Helper: Bitmap Loader
+# Hỗ trợ: Tải ảnh Bitmap
 function Get-ZaloBitmap {
     param($filename)
     $path = Join-Path $Global:IconFolder $filename
@@ -92,14 +122,14 @@ function Get-ZaloBitmap {
     return $null
 }
 
-# Initialize Images
+# Khởi tạo hình ảnh
 $Global:ImgLogo.Source = Get-ZaloBitmap "zalo.png"
 $Global:ImgFB.Source = Get-ZaloBitmap "facebook.png"
 $Global:ImgTG.Source = Get-ZaloBitmap "telegram.png"
 $Global:ImgGH.Source = Get-ZaloBitmap "github.png"
 $Global:ImgWS.Source = Get-ZaloBitmap "website.png"
 
-# Helper: Update Brush Resource
+# Hỗ trợ: Cập nhật tài nguyên Brush
 function Set-GlobalBrush {
     param($key, $hex)
     try {
@@ -108,7 +138,7 @@ function Set-GlobalBrush {
     } catch { }
 }
 
-# Helper: Theme Switcher
+# Hỗ trợ: Chuyển đổi chủ đề
 function Set-AppTheme {
     param($mode)
     try {
@@ -142,7 +172,7 @@ function Set-AppTheme {
     } catch { }
 }
 
-# Helper: Update Accent Color
+# Hỗ trợ: Cập nhật màu nhấn
 function Update-AppAccent {
     param($hex)
     try {
@@ -165,7 +195,7 @@ function Update-AppAccent {
     } catch { }
 }
 
-# Helper: Desktop Shortcut
+# Hỗ trợ: Tạo lối tắt ngoài Desktop
 function New-AppShortcut {
     param($name, $index)
     try {
@@ -186,7 +216,7 @@ function New-AppShortcut {
     } catch { }
 }
 
-# Helper: Zalo Launcher
+# Hỗ trợ: Trình khởi chạy Zalo
 function Start-ZaloInstance {
     param($name)
     $profilePath = Join-Path $Global:ProfileRoot $name
@@ -205,7 +235,7 @@ function Start-ZaloInstance {
     [System.Diagnostics.Process]::Start($processInfo) | Out-Null
 }
 
-# Main UI Refresh
+# Làm mới giao diện chính
 function Update-AppUIList {
     # 1. Clean all existing Zalo shortcuts from Desktop first
     try {
@@ -345,7 +375,7 @@ function Update-AppUIList {
     }
 }
 
-# Events Handlers
+# Trình xử lý sự kiện
 $Global:BtnLight.Add_Click({ Set-AppTheme "Light" })
 $Global:BtnDark.Add_Click({ Set-AppTheme "Dark" })
 Update-AppAccent "#74B9FF"
@@ -394,7 +424,7 @@ $Global:BtnKillAll.Add_Click({
 $Global:BtnClose.Add_Click({ $Global:window.Close() })
 $Global:window.Add_MouseLeftButtonDown({ $this.DragMove() })
 
-# CLI Argument Handler
+# Trình xử lý đối số dòng lệnh
 $allArgs = $MyInvocation.BoundParameters.Values + $args
 for ($i=0; $i -lt $allArgs.Count; $i++) {
     if ($allArgs[$i] -eq "-LaunchInstance") {
@@ -410,6 +440,6 @@ for ($i=0; $i -lt $allArgs.Count; $i++) {
     }
 }
 
-# Run Application
+# Chạy ứng dụng
 Update-AppUIList
 $Global:window.ShowDialog() | Out-Null
