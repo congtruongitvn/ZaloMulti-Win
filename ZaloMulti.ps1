@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # ZALỎMULTI - PHIÊN BẢN HOÀN THIỆN
 # BẢN QUYỀN TRUONG.IT
 # ============================================================
@@ -23,6 +23,7 @@ if ($consolePtr -ne [IntPtr]::Zero) {
 }
 
 # Cấu hình toàn cầu
+$Global:Version = "1.0.1" # Phiên bản hiện tại
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
@@ -345,6 +346,60 @@ function Start-ZaloInstance {
     }
 }
 
+# --- CƠ CHẾ CẬP NHẬT TỰ ĐỘNG ---
+function Update-AppSilently {
+    $remoteScriptUrl = "https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/ZaloMulti.ps1"
+    $tempFile = Join-Path $env:TEMP "ZaloMulti_new.ps1"
+    try {
+        $wc = New-Object System.Net.WebClient
+        $wc.DownloadFile($remoteScriptUrl, $tempFile)
+        
+        $currentScript = $MyInvocation.MyCommand.Definition
+        $updateBat = Join-Path $env:TEMP "update_zalo_multi.bat"
+        $batContent = @"
+@echo off
+title Dang cap nhat ZaloMulti...
+timeout /t 1 /nobreak > nul
+move /y "$tempFile" "$currentScript"
+start "" powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "$currentScript"
+del "%~f0"
+"@
+        [System.IO.File]::WriteAllText($updateBat, $batContent, [System.Text.Encoding]::ASCII)
+        Start-Process $updateBat -WindowStyle Hidden
+        $Global:window.Close()
+        exit
+    } catch {
+        [System.Windows.MessageBox]::Show("Lỗi khi tải bản cập nhật: $($_.Exception.Message)")
+    }
+}
+
+function Check-ForUpdates {
+    $remoteVersionUrl = "https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/version.txt"
+    $currentUrl = "https://github.com/congtruongitvn/ZaloMulti-Win"
+    
+    # Chạy ngầm việc kiểm tra để không làm chậm lúc mở app
+    Start-Job -ScriptBlock {
+        param($url)
+        try {
+            $val = (Invoke-RestMethod -Uri $url -TimeoutSec 5).Trim()
+            return $val
+        } catch { return $null }
+    } -ArgumentList $remoteVersionUrl | Out-Null
+    
+    # Đợi tối đa 2 giây để lấy version
+    $job = Get-Job | Sort-Object ID -Descending | Select-Object -First 1
+    Wait-Job $job -Timeout 2 | Out-Null
+    $remoteVersion = Receive-Job $job
+    
+    if ($remoteVersion -and $remoteVersion -gt $Global:Version) {
+        $msg = "Đã có phiên bản mới ($remoteVersion).`n`nBạn có muốn cập nhật tự động ngay bây giờ không?`n(Ứng dụng sẽ tự khởi động lại sau khi xong)"
+        $res = [System.Windows.MessageBox]::Show($msg, "Bản cập nhật mới", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Information)
+        if ($res -eq "Yes") {
+            Update-AppSilently
+        }
+    }
+}
+
 function Update-AppUIList {
     $Global:InstanceGrid.Children.Clear()
     $profiles = Get-ChildItem $Global:ProfileRoot | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime
@@ -512,6 +567,7 @@ for ($i=0; $i -lt $allArgs.Count; $i++) {
     }
 }
 
+Check-ForUpdates
 Update-AppUIList
-$Global:TxtVersion.Text = "Phiên bản 7x7=59"
+$Global:TxtVersion.Text = "Phiên bản $Global:Version"
 $Global:window.ShowDialog() | Out-Null
