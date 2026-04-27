@@ -4,16 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZalỏMulti-Win - Quản lý nhiều tài khoản Zalo cùng lúc</title>
-    <meta name="description"
-        content="ZalỏMulti-Win là công cụ mã nguồn mở mạnh mẽ giúp bạn chạy nhiều tài khoản Zalo độc lập trên Windows một cách an toàn và dễ dàng.">
-
-    <!-- Google Fonts -->
+    <title>ZalỏMulti - Quản lý nhiều tài khoản Zalo</title>
+    
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,7 +19,8 @@
 
     <nav>
         <div class="logo">
-            <i class="fab fa-facebook-messenger"></i> ZalỏMulti-Win
+            <img src="https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/Assets/zalo.png" alt="Logo">
+            ZalỏMulti
         </div>
         <ul class="nav-links">
             <li><a href="#features">Tính năng</a></li>
@@ -36,118 +33,105 @@
     </nav>
 
     <section class="hero">
-        <div class="hero-content">
-            <div class="version-badge">v1.0.1 - Mới cập nhật</div>
-            <h1>Quản lý nhiều nick Zalo <span>Cực kỳ dễ dàng.</span></h1>
-            <p>Sử dụng nhiều tài khoản Zalo độc lập trên Windows với dữ liệu biệt lập, bảo mật và hoàn toàn
-                miễn phí. Giải pháp tối ưu cho làm việc và quản lý doanh nghiệp.</p>
-            <div class="cta-group">
-                <a href="https://github.com/congtruongitvn/ZaloMulti-Win/releases" class="btn-primary">Tải về ngay</a>
-                <a href="#features" class="btn-secondary">Xem tính năng <i class="fas fa-arrow-right"></i></a>
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <div class="version-badge">v1.0.1 - New Update</div>
+                <h1>Quản lý nhiều nick Zalo <span>Cực kỳ dễ dàng.</span></h1>
+                <p>Sử dụng đồng thời nhiều tài khoản Zalo biệt lập trên Windows. Dữ liệu an toàn, bảo mật và hoàn toàn miễn phí cho cộng đồng.</p>
+                <div class="cta-group">
+                    <a href="https://github.com/congtruongitvn/ZaloMulti-Win/releases" class="btn-primary">Tải về ngay</a>
+                    <a href="#features" class="btn-link">Xem tính năng <i class="fas fa-arrow-right"></i></a>
+                </div>
             </div>
-        </div>
-        <div class="hero-spectrum">
-            <img src="../Assets/zalo_01_Do.ico" alt="Red">
-            <img src="../Assets/zalo_02_XanhLa.ico" alt="Green">
-            <img src="../Assets/zalo_03_Cam.ico" alt="Orange">
-            <img src="../Assets/zalo_05_Tim.ico" alt="Purple">
-            <img src="../Assets/zalo_07_XanhDuongDam.ico" alt="Blue">
-            <img src="../Assets/zalo_08_XanhNgoc.ico" alt="Cyan">
+            <div class="hero-image">
+                <div class="spectrum-card">
+                    <p>Hỗ trợ đa màu sắc</p>
+                    <div class="icons-row">
+                        <img src="https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/Assets/zalo_01_Do.ico" alt="Icon">
+                        <img src="https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/Assets/zalo_02_XanhLa.ico" alt="Icon">
+                        <img src="https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/Assets/zalo_03_Cam.ico" alt="Icon">
+                        <img src="https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/Assets/zalo_05_Tim.ico" alt="Icon">
+                        <img src="https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/Assets/zalo_07_XanhDuongDam.ico" alt="Icon">
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <section class="whats-new" id="whats-new">
-        <div class="section-title">
-            <h2>Bản vá v1.0.1 có gì mới?</h2>
-            <p>Chúng tôi vừa cập nhật những tính năng quan trọng nhất dựa trên phản hồi của bạn.</p>
-        </div>
-        <div class="update-grid">
-            <div class="update-card">
-                <i class="fas fa-sync-alt"></i>
-                <h4>Cập nhật tự động</h4>
-                <p>Hệ thống tự động kiểm tra phiên bản mới từ GitHub và thực hiện cập nhật silent chỉ với 1 click.</p>
+        <div class="container">
+            <div class="section-title">
+                <h2>Bản vá v1.0.1 có gì mới?</h2>
             </div>
-            <div class="update-card">
-                <i class="fas fa-bug"></i>
-                <h4>Sửa lỗi khởi chạy</h4>
-                <p>Khắc phục hoàn toàn lỗi không có phản hồi khi nhấn nút "Mở tài khoản" trên một số phiên bản Windows.</p>
-            </div>
-            <div class="update-card">
-                <i class="fas fa-wand-magic-sparkles"></i>
-                <h4>Giao diện tối ưu</h4>
-                <p>Sắp xếp lại các nút chức năng (Đưa nút Tạo lối tắt lên trên) giúp thao tác nhanh và thuận tiện hơn.</p>
+            <div class="update-grid">
+                <div class="update-card">
+                    <i class="fas fa-sync-alt"></i>
+                    <h3>Cập nhật tự động</h3>
+                    <p>Hệ thống tự động kiểm tra và nâng cấp phiên bản chỉ với 1 click chuột.</p>
+                </div>
+                <div class="update-card">
+                    <i class="fas fa-shield-check"></i>
+                    <h3>Sửa lỗi khởi chạy</h3>
+                    <p>Khắc phục lỗi không phản hồi khi mở tài khoản trên Windows 10/11.</p>
+                </div>
+                <div class="update-card">
+                    <i class="fas fa-layer-group"></i>
+                    <h3>Giao diện tối ưu</h3>
+                    <p>Bố cục nút bấm được sắp xếp lại khoa học, dễ thao tác hơn.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="features" id="features">
-        <div class="section-title">
-            <h2>Tại sao chọn ZalỏMulti-Win?</h2>
-            <p style="color: var(--text-sec);">Được xây dựng để đơn giản hóa quy trình làm việc của bạn.</p>
-        </div>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
-                <h3>Không giới hạn số nick</h3>
-                <p>Mở bao nhiêu tài khoản tùy thích, chỉ phụ thuộc vào cấu hình RAM máy tính của bạn.</p>
+        <div class="container">
+            <div class="section-title">
+                <h2>Tại sao chọn ZalỏMulti?</h2>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
-                <h3>Cô lập dữ liệu tuyệt đối</h3>
-                <p>Mỗi tài khoản có một môi trường APPDATA riêng, không bao giờ bị xung đột hoặc đá nick nhau.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-palette"></i></div>
-                <h3>Giao diện Acrylic/Glass</h3>
-                <p>Hỗ trợ Dark Mode chuẩn Windows 11 và bảng màu sắc tùy chỉnh đa dạng cho từng icon.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-                <h3>Tạo Shortcut Desktop</h3>
-                <p>Tự động tạo biểu tượng ngoài Desktop cho từng nick để truy cập trực tiếp không cần mở App quản lý.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-rotate"></i></div>
-                <h3>Di chuyển Profile dễ dàng</h3>
-                <p>Dễ dàng nén và chuyển toàn bộ dữ liệu tài khoản sang máy tính khác chỉ trong vài giây.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><i class="fas fa-code"></i></div>
-                <h3>Mã nguồn mở 100%</h3>
-                <p>Hoàn toàn miễn phí, minh bạch và an toàn. Bạn có thể kiểm tra mã nguồn bất cứ lúc nào.</p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-users-gear"></i>
+                    <h4>Đa tài khoản</h4>
+                    <p>Chạy không giới hạn số lượng nick Zalo trên cùng một máy tính.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-folder-open"></i>
+                    <h4>Dữ liệu riêng biệt</h4>
+                    <p>Mỗi nick có một thư mục lưu trữ độc lập, không lo bị đá phiên đăng nhập.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-code"></i>
+                    <h4>Mã nguồn mở</h4>
+                    <p>Ứng dụng minh bạch, an toàn và hoàn toàn miễn phí cho tất cả mọi người.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="install" id="install">
-        <div class="section-title">
-            <h2>Hướng dẫn cài đặt</h2>
-            <p style="color: var(--text-sec);">Sẵn sàng sử dụng chỉ trong 4 bước đơn giản.</p>
-        </div>
-        <div class="install-box">
-            <pre>
-# Bước 1: Tải file từ GitHub (Nút GitHub phía trên)
-# Bước 2: Giải nén vào thư mục bạn muốn lưu App
-# Bước 3: Chuột phải vào file ZaloMulti.ps1 -> Run with PowerShell
-# Bước 4: Thêm tài khoản mới và tận hưởng!
-            </pre>
+        <div class="container">
+            <div class="section-title">
+                <h2>Cách cài đặt</h2>
+            </div>
+            <div class="install-box">
+                <code>
+                    1. Tải về từ GitHub Releases.<br>
+                    2. Giải nén vào thư mục bất kỳ.<br>
+                    3. Chuột phải vào ZaloMulti.ps1 chọn Run with PowerShell.<br>
+                    4. Bắt đầu thêm tài khoản và sử dụng.
+                </code>
+            </div>
         </div>
     </section>
 
     <footer>
-        <div class="social-links">
-            <a href="https://fb.me/congtruongit" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://t.me/congtruongit" target="_blank"><i class="fab fa-telegram"></i></a>
-            <a href="https://github.com/congtruongitvn/ZaloMulti-Win" target="_blank"><i class="fab fa-github"></i></a>
+        <div class="container">
+            <div class="footer-logo">
+                <img src="https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/Assets/zalo.png" width="30"> ZalỏMulti
+            </div>
+            <p>Phát triển bởi <a href="https://truong.it">truong.it</a>. Bản quyền © 2026.</p>
         </div>
-        <div class="logo" style="justify-content: center; margin-bottom: 20px;">
-            <i class="fab fa-facebook-messenger"></i> ZalỏMulti-Win
-        </div>
-        <p class="copyright">Bản quyền © 2026 bởi <a href="https://truong.it"
-                style="color: var(--primary); text-decoration: none;">truong.it</a>. Phát triển với đam mê cho cộng đồng IT Việt Nam.</p>
     </footer>
 
-    <script src="script.js"></script>
 </body>
-
 </html>
