@@ -19,7 +19,7 @@
 - **Cập nhật tự động (Auto-Update)**: Hệ thống tự động kiểm tra và thông báo khi có bản vá lỗi hoặc tính năng mới từ GitHub.
 - **Sửa lỗi "Không phản hồi"**: Khắc phục triệt để lỗi nhấn nút "Mở tài khoản" nhưng không có hiện tượng gì xảy ra.
 - **Cải tiến giao diện**: Đưa nút **Tạo lối tắt (🔗)** lên thanh tiêu đề thẻ tài khoản để gọn gàng và dễ thao tác hơn.
-- **GitHub Page**: Đã có trang giới thiệu chuyên nghiệp tại [congtruongitvn.github.io/ZaloMulti](https://congtruongitvn.github.io/ZaloMulti/).
+- **GitHub Page**: Đã có trang giới thiệu chuyên nghiệp tại [congtruongitvn.github.io/ZaloMulti-Win](https://congtruongitvn.github.io/ZaloMulti-Win/).
 
 ## ✨ Tính năng nổi bật
 - **Quản lý không giới hạn**: Thêm, xóa và đặt tên cho từng tài khoản Zalo riêng biệt.
@@ -56,7 +56,7 @@ Khi bạn nhấn "Mở tài khoản", ứng dụng sẽ thực hiện:
 - **PowerShell**: Phiên bản 5.1 trở lên (có sẵn trên Windows).
 
 ## 🚀 Hướng dẫn cài đặt & Sử dụng
-1. **Tải về**: Tải toàn bộ thư mục này từ GitHub của [congtruongitvn](https://github.com/congtruongitvn/ZaloMulti).
+1. **Tải về**: Tải toàn bộ thư mục này từ GitHub của [congtruongitvn](https://github.com/congtruongitvn/ZaloMulti-Win).
 2. **Khởi chạy**: Nhấn đúp chuột vào file `ZaloMulti.bat` để mở ứng dụng.
 3. **Thêm tài khoản**: Nhấn "Thêm tài khoản", nhập tên và bắt đầu sử dụng.
 4. **Mở Zalo**: Nhấn "MỞ TÀI KHOẢN" trên thẻ tương ứng để bắt đầu đăng nhập.
@@ -92,6 +92,7 @@ Nếu bạn gặp lỗi trong quá trình sử dụng, hãy thử các cách sau
 Nếu bạn thấy công cụ này hữu ích, hãy để lại một **Star** ⭐ trên GitHub hoặc liên hệ với tôi qua:
 - **Facebook**: [congtruongit](https://fb.me/congtruongit)
 - **Telegram**: [@congtruongit](https://t.me/congtruongit)
+- **GitHub**: [congtruongitvn/ZaloMulti-Win](https://github.com/congtruongitvn/ZaloMulti-Win)
 - **Website**: [truong.it](https://truong.it)
 
 ---
