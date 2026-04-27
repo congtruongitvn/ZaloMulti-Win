@@ -216,15 +216,37 @@ function New-AppShortcut {
     } catch { }
 }
 
-# Hỗ trợ: Trình khởi chạy Zalo
+# Hỗ trợ: Trình khởi chạy Zalo + Fake Device ID
 function Start-ZaloInstance {
     param($name)
     $profilePath = Join-Path $Global:ProfileRoot $name
     $roamingPath = Join-Path $profilePath "AppData\Roaming"
     $localPath = Join-Path $profilePath "AppData\Local"
+    $zaloDataPath = Join-Path $roamingPath "ZaloData"
     
     if (-not (Test-Path $roamingPath)) { New-Item -ItemType Directory -Path $roamingPath -Force | Out-Null }
     if (-not (Test-Path $localPath)) { New-Item -ItemType Directory -Path $localPath -Force | Out-Null }
+    if (-not (Test-Path $zaloDataPath)) { New-Item -ItemType Directory -Path $zaloDataPath -Force | Out-Null }
+
+    # --- Logic tạo Device ID ngẫu nhiên ---
+    # 1. Tạo file z_u.txt (Định danh quan trọng nhất)
+    $randomPart1 = -join ((1..19) | ForEach-Object { Get-Random -Minimum 0 -Maximum 10 })
+    $timestamp = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
+    $randomHash = [System.Guid]::NewGuid().ToString("n") # 32 ký tự hex (MD5 format)
+    $zuContent = "$randomPart1.$timestamp.$randomHash"
+    $zuContent | Set-Content (Join-Path $roamingPath "z_u.txt") -Force -Encoding ASCII
+
+    # 2. Tạo file storage.json trong ZaloData (Để dự phòng)
+    $storageJsonPath = Join-Path $zaloDataPath "storage.json"
+    $deviceId = [System.Guid]::NewGuid().ToString().ToUpper() # UUID format
+    $storageContent = '{"deviceId":"' + $deviceId + '"}'
+    $storageContent | Set-Content $storageJsonPath -Force -Encoding UTF8
+
+    # 3. Tạo file config.json cơ bản nếu chưa có để ép Zalo nhận diện mới
+    $configPath = Join-Path $zaloDataPath "config.json"
+    if (-not (Test-Path $configPath)) {
+        '{"zalo_installed":' + $timestamp + '}' | Set-Content $configPath -Force -Encoding UTF8
+    }
 
     $processInfo = New-Object System.Diagnostics.ProcessStartInfo
     $processInfo.FileName = $Global:ZaloPath
