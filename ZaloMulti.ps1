@@ -24,18 +24,43 @@ if ($consolePtr -ne [IntPtr]::Zero) {
 
 # Global Configuration
 $Global:AppPath = $PSScriptRoot
-$Global:ZaloPath = "C:\Users\$($env:USERNAME)\AppData\Local\Programs\Zalo\Zalo.exe"
-$Global:ProfileRoot = "C:\Zalo_Clone_Profiles"
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
+$Global:ProfileRoot = "C:\Zalo_Clone_Profiles"
 
-if (-not (Test-Path $Global:ProfileRoot)) { 
-    New-Item -ItemType Directory -Path $Global:ProfileRoot -Force | Out-Null
+# Robust Zalo Path Detection
+$CommonZaloPaths = @(
+    "C:\Users\$($env:USERNAME)\AppData\Local\Programs\Zalo\Zalo.exe",
+    "C:\Program Files (x86)\Zalo\Zalo.exe",
+    "C:\Program Files\Zalo\Zalo.exe"
+)
+$Global:ZaloPath = ""
+foreach ($path in $CommonZaloPaths) {
+    if (Test-Path $path) {
+        $Global:ZaloPath = $path
+        break
+    }
+}
+
+if (-not $Global:ZaloPath) {
+    [System.Windows.MessageBox]::Show("Không tìm thấy Zalo.exe trên hệ thống! Vui lòng cài đặt Zalo trước.", "Lỗi Hệ Thống", 0, 16)
+    exit
+}
+
+try {
+    if (-not (Test-Path $Global:ProfileRoot)) { 
+        New-Item -ItemType Directory -Path $Global:ProfileRoot -Force -ErrorAction Stop | Out-Null
+    }
+} catch {
+    $Global:ProfileRoot = Join-Path $env:USERPROFILE "Zalo_Clone_Profiles"
+    if (-not (Test-Path $Global:ProfileRoot)) { 
+        New-Item -ItemType Directory -Path $Global:ProfileRoot -Force | Out-Null
+    }
 }
 
 # Load & Patch XAML (Dynamic Font Path for Portability)
 $xamlRaw = Get-Content (Join-Path $Global:AppPath "ZaloMulti.xaml") -Raw
-$xamlRaw = $xamlRaw.Replace("file:///C:/Users/truongit/ZaloMulti/Assets/#Pin-Sans-Regular", $Global:FontPath)
+$xamlRaw = $xamlRaw.Replace("__FONT_PATH__", $Global:FontPath)
 
 [xml]$xamlContent = $xamlRaw
 $reader = New-Object System.Xml.XmlNodeReader $xamlContent

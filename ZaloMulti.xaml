@@ -3,7 +3,7 @@
         Title="Quản lý ZalỏMulti" Height="700" Width="1000"
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
-        FontFamily="file:///C:/Users/truongit/ZaloMulti/Assets/#Pin-Sans-Regular">
+        FontFamily="__FONT_PATH__">
     <Window.Resources>
         <!-- Design System Tokens (Default Dark) -->
         <SolidColorBrush x:Key="BgDark" Color="#0A0A0A"/>
@@ -20,10 +20,10 @@
  
         <!-- Global Font Fix -->
         <Style TargetType="Control">
-            <Setter Property="FontFamily" Value="file:///C:/Users/truongit/ZaloMulti/Assets/#Pin-Sans-Regular"/>
+            <Setter Property="FontFamily" Value="__FONT_PATH__"/>
         </Style>
         <Style TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="file:///C:/Users/truongit/ZaloMulti/Assets/#Pin-Sans-Regular"/>
+            <Setter Property="FontFamily" Value="__FONT_PATH__"/>
         </Style>
 
         <!-- Button Styles -->

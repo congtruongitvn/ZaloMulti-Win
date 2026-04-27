@@ -52,9 +52,16 @@ Khi bạn nhấn "Mở tài khoản", ứng dụng sẽ thực hiện:
 - `.gitignore`: Cấu hình loại trừ các dữ liệu cá nhân khi đẩy lên GitHub.
 
 ## 📝 Lưu ý quan trọng
-- **Tính an toàn**: Ứng dụng không yêu cầu quyền Admin (trừ khi thư mục `C:\` của bạn bị khóa).
-- **Tính bảo mật**: Mọi tin nhắn và dữ liệu cá nhân nằm trong máy tính của bạn (`C:\Zalo_Clone_Profiles`). ZalỏMulti không gửi bất kỳ dữ liệu nào ra bên ngoài.
-- **Dọn dẹp**: Nếu bạn xóa ứng dụng, hãy nhớ xóa thư mục `C:\Zalo_Clone_Profiles` thủ công nếu muốn giải phóng dung lượng ổ cứng.
+- **Vị trí lưu dữ liệu**: Mặc định là `C:\Zalo_Clone_Profiles`. Nếu bạn không có quyền ghi vào ổ C, ứng dụng sẽ tự động lưu tại thư mục người dùng của bạn (`C:\Users\Tên_Bạn\Zalo_Clone_Profiles`).
+- **Tính an toàn**: Ứng dụng không yêu cầu quyền Admin.
+- **Tính bảo mật**: Mọi tin nhắn và dữ liệu cá nhân nằm trong máy tính của bạn. ZalỏMulti không gửi bất kỳ dữ liệu nào ra bên ngoài.
+- **Dọn dẹp**: Nếu bạn xóa ứng dụng, hãy nhớ xóa thư mục dữ liệu thủ công nếu muốn giải phóng dung lượng ổ cứng.
+
+## ❓ Giải quyết sự cố (Troubleshooting)
+Nếu bạn không mở được ứng dụng sau khi tải về, hãy kiểm tra:
+1. **Unblock file**: Click chuột phải vào file `.zip` vừa tải về (hoặc thư mục đã giải nén), chọn **Properties**, tick vào ô **Unblock** ở dưới cùng rồi nhấn **OK**.
+2. **Quyền thực thi**: Mở PowerShell với quyền Admin và chạy lệnh: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` sau đó chọn `Y`.
+3. **Zalo Desktop**: Đảm bảo bạn đã cài đặt bản Zalo Desktop chính thức.
 
 ## 🤝 Đóng góp & Liên hệ
 Nếu bạn thấy công cụ này hữu ích, hãy để lại một **Star** ⭐ trên GitHub hoặc liên hệ với tôi qua:
