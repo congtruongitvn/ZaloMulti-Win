@@ -376,13 +376,17 @@ function Start-ZaloInstance {
 
     $processInfo = New-Object System.Diagnostics.ProcessStartInfo
     $processInfo.FileName = $Global:ZaloPath
-    $processInfo.UseShellExecute = $true # Thay đổi sang true để Windows xử lý việc tách tiến trình tốt hơn
+    $processInfo.UseShellExecute = $false # Sửa: Phải là false để truyền được biến môi trường APPDATA
     $processInfo.EnvironmentVariables["USERPROFILE"] = $profilePath
     $processInfo.EnvironmentVariables["APPDATA"] = $roamingPath
     $processInfo.EnvironmentVariables["LOCALAPPDATA"] = $localPath
     
-    # Khởi chạy một cách độc lập hoàn toàn
-    [System.Diagnostics.Process]::Start($processInfo) | Out-Null
+    try {
+        # Khởi chạy một cách độc lập hoàn toàn
+        [System.Diagnostics.Process]::Start($processInfo) | Out-Null
+    } catch {
+        [System.Windows.MessageBox]::Show("Không thể khởi chạy Zalo: $($_.Exception.Message)", "Lỗi", 0, 16)
+    }
 }
 
 # Làm mới giao diện chính
@@ -411,26 +415,44 @@ function Update-AppUIList {
         $cardStack = New-Object System.Windows.Controls.StackPanel
         
         $headerGrid = New-Object System.Windows.Controls.Grid
-        
+        $headerGrid.ColumnDefinitions.Add((New-Object System.Windows.Controls.ColumnDefinition -Property @{Width = New-Object System.Windows.GridLength(1, [System.Windows.GridUnitType]::Star)}))
+        $headerGrid.ColumnDefinitions.Add((New-Object System.Windows.Controls.ColumnDefinition -Property @{Width = New-Object System.Windows.GridLength(30)}))
+        $headerGrid.ColumnDefinitions.Add((New-Object System.Windows.Controls.ColumnDefinition -Property @{Width = New-Object System.Windows.GridLength(30)}))
+
         $nameBox = New-Object System.Windows.Controls.TextBox
         $nameBox.Text = $name.ToUpper()
         $nameBox.Style = $Global:window.Resources["EditBox"]
         $nameBox.FontSize = 14
         $nameBox.FontWeight = "Bold"
-        $nameBox.Margin = "0,0,35,5" 
+        $nameBox.Margin = "0,0,5,5" 
         $nameBox.Tag = $name
         $nameBox.SetResourceReference([System.Windows.Controls.TextBox]::ForegroundProperty, "TextMain")
+        [System.Windows.Controls.Grid]::SetColumn($nameBox, 0)
+
+        # Nút Tạo lối tắt (Mới: Đưa lên trên)
+        $scBtn = New-Object System.Windows.Controls.Button
+        $scBtn.Content = "🔗"
+        $scBtn.ToolTip = "Tạo lối tắt ngoài Desktop"
+        $scBtn.Style = $Global:window.Resources["ActionBtn"]
+        $scBtn.FontSize = 14
+        $scBtn.Width = 24
+        $scBtn.Height = 24
+        $scBtn.Padding = 0
+        $scBtn.Cursor = [Windows.Input.Cursors]::Hand
+        $scBtn.Tag = @{ Name = $name; Index = $count - 1 }
+        $scBtn.Add_Click({ New-AppShortcut -name $this.Tag.Name -index $this.Tag.Index })
+        [System.Windows.Controls.Grid]::SetColumn($scBtn, 1)
         
         $delBorder = New-Object System.Windows.Controls.Border
         $delBorder.Background = [System.Windows.Media.Brushes]::White
         $delBorder.CornerRadius = 12
         $delBorder.Width = 24
         $delBorder.Height = 24
-        $delBorder.HorizontalAlignment = "Right"
-        $delBorder.VerticalAlignment = "Top"
-        $delBorder.Margin = "0,-5,-5,0"
+        $delBorder.HorizontalAlignment = "Center"
+        $delBorder.VerticalAlignment = "Center"
         $delBorder.Cursor = [Windows.Input.Cursors]::Hand
         $delBorder.ToolTip = "Xoá tài khoản này"
+        [System.Windows.Controls.Grid]::SetColumn($delBorder, 2)
         
         $trashIcon = New-Object System.Windows.Controls.TextBlock
         $trashIcon.Text = "🗑"
@@ -467,6 +489,7 @@ function Update-AppUIList {
         $delBorder.Tag = $name
 
         $headerGrid.Children.Add($nameBox)
+        $headerGrid.Children.Add($scBtn)
         $headerGrid.Children.Add($delBorder)
 
         $nameBox.Add_LostFocus({
@@ -516,37 +539,16 @@ function Update-AppUIList {
         $grid.Children.Add($phonePrefix)
         $grid.Children.Add($phoneBox)
 
-        $launchGrid = New-Object System.Windows.Controls.Grid
-        $lgCol1 = New-Object System.Windows.Controls.ColumnDefinition
-        $lgCol1.Width = New-Object System.Windows.GridLength(1, [System.Windows.GridUnitType]::Star)
-        $launchGrid.ColumnDefinitions.Add($lgCol1)
-        $lgCol2 = New-Object System.Windows.Controls.ColumnDefinition
-        $lgCol2.Width = New-Object System.Windows.GridLength(40)
-        $launchGrid.ColumnDefinitions.Add($lgCol2)
-
         $launchBtn = New-Object System.Windows.Controls.Button
         $launchBtn.Content = "MỞ TÀI KHOẢN"
         $launchBtn.Style = $Global:window.Resources["RoundBtn"]
         $launchBtn.Tag = $name
         $launchBtn.Add_Click({ Start-ZaloInstance $this.Tag })
-        [System.Windows.Controls.Grid]::SetColumn($launchBtn, 0)
-
-        $scBtn = New-Object System.Windows.Controls.Button
-        $scBtn.Content = "🔗"
-        $scBtn.ToolTip = "Tạo lối tắt ngoài Desktop"
-        $scBtn.Style = $Global:window.Resources["RoundBtn"]
-        $scBtn.Background = [System.Windows.Media.Brushes]::Transparent
-        $scBtn.BorderThickness = 0
-        $scBtn.Tag = @{ Name = $name; Index = $count - 1 }
-        $scBtn.Add_Click({ New-AppShortcut -name $this.Tag.Name -index $this.Tag.Index })
-        [System.Windows.Controls.Grid]::SetColumn($scBtn, 1)
-
-        $launchGrid.Children.Add($launchBtn)
-        $launchGrid.Children.Add($scBtn)
-
+        $launchBtn.Width = 270 # Full width của card (310 - padding 2*20)
+        
         $cardStack.Children.Add($headerGrid)
         $cardStack.Children.Add($grid)
-        $cardStack.Children.Add($launchGrid)
+        $cardStack.Children.Add($launchBtn)
         $border.Child = $cardStack
         $Global:InstanceGrid.Children.Add($border)
     }
