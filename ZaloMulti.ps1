@@ -550,9 +550,9 @@ foreach ($i in (1..9)) {
 
 $Global:window.FindName("BtnFB").Add_Click({ Start-Process "https://fb.me/congtruongit" | Out-Null })
 $Global:window.FindName("BtnTG").Add_Click({ Start-Process "https://t.me/congtruongit" | Out-Null })
-$Global:window.FindName("BtnGH").Add_Click({ Start-Process "https://github.com/congtruongit/ZaloMulti" | Out-Null })
+$Global:window.FindName("BtnGH").Add_Click({ Start-Process "https://github.com/congtruongitvn/ZaloMulti" | Out-Null })
 $Global:window.FindName("BtnWS").Add_Click({ Start-Process "https://truong.it" | Out-Null })
-$Global:TxtVersion.Add_MouseDown({ Start-Process "https://github.com/congtruongit/ZaloMulti" | Out-Null })
+$Global:TxtVersion.Add_MouseDown({ Start-Process "https://github.com/congtruongitvn/ZaloMulti" | Out-Null })
 
 $Global:MainScroll.Add_ScrollChanged({
     if ($this.VerticalOffset -gt 200) { $Global:BtnToTop.Visibility = "Visible" }

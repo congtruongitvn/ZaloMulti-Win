@@ -1,8 +1,14 @@
-# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop
+# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop (v7x7=59)
 
 **ZalỏMulti** là một công cụ mạnh mẽ, gọn nhẹ và thẩm mỹ dành cho người dùng Windows, giúp quản lý và chạy đồng thời nhiều tài khoản Zalo Desktop trên cùng một máy tính một cách dễ dàng.
 
 ![ZaloMulti UI](Assets/zalo.png)
+
+## ✨ Tính năng mới (Cập nhật 27/04/2026)
+- **Lưu trạng thái giao diện**: Tự động lưu và khôi phục Chế độ Sáng/Tối cùng màu sắc đã chọn khi khởi động lại ứng dụng.
+- **Sửa lỗi Startup**: Khắc phục hoàn toàn lỗi JavaScript (JSON BOM) khi khởi động Zalo trên một số phiên bản Electron mới.
+- **Tối ưu hóa Desktop**: Cải thiện cơ chế tạo Shortcut nhanh.
+- **GitHub Page**: Đã có trang giới thiệu chuyên nghiệp tại [congtruongitvn.github.io/ZaloMulti](https://congtruongitvn.github.io/ZaloMulti/).
 
 ## ✨ Tính năng nổi bật
 - **Quản lý không giới hạn**: Thêm, xóa và đặt tên cho từng tài khoản Zalo riêng biệt.
@@ -39,7 +45,7 @@ Khi bạn nhấn "Mở tài khoản", ứng dụng sẽ thực hiện:
 - **PowerShell**: Phiên bản 5.1 trở lên (có sẵn trên Windows).
 
 ## 🚀 Hướng dẫn cài đặt & Sử dụng
-1. **Tải về**: Tải toàn bộ thư mục này về máy tính của bạn.
+1. **Tải về**: Tải toàn bộ thư mục này từ GitHub của [congtruongitvn](https://github.com/congtruongitvn/ZaloMulti).
 2. **Khởi chạy**: Nhấn đúp chuột vào file `ZaloMulti.bat` để mở ứng dụng.
 3. **Thêm tài khoản**: Nhấn "Thêm tài khoản", nhập tên và bắt đầu sử dụng.
 4. **Mở Zalo**: Nhấn "MỞ TÀI KHOẢN" trên thẻ tương ứng để bắt đầu đăng nhập.
@@ -48,6 +54,7 @@ Khi bạn nhấn "Mở tài khoản", ứng dụng sẽ thực hiện:
 - `ZaloMulti.ps1`: Mã nguồn chính xử lý logic (PowerShell).
 - `ZaloMulti.xaml`: Định nghĩa giao diện người dùng (WPF).
 - `ZaloMulti.bat`: File thực thi để khởi động ứng dụng nhanh.
+- `docs/`: Thư mục chứa mã nguồn trang giới thiệu (GitHub Pages).
 - `Assets/`: Thư mục chứa tài nguyên (Font, Icon, Images).
 - `.gitignore`: Cấu hình loại trừ các dữ liệu cá nhân khi đẩy lên GitHub.
 
