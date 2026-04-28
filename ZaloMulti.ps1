@@ -356,8 +356,8 @@ function Get-AccountStatus {
     param($profileDir)
     $pidFile = Join-Path $profileDir "pid.txt"
     if (Test-Path $pidFile) {
-        $pid = (Get-Content $pidFile -Raw -ErrorAction SilentlyContinue).Trim()
-        if ($pid -and (Get-Process -Id $pid -ErrorAction SilentlyContinue)) {
+        $savedPid = (Get-Content $pidFile -Raw -ErrorAction SilentlyContinue).Trim()
+        if ($savedPid -and (Get-Process -Id $savedPid -ErrorAction SilentlyContinue)) {
             return $true
         }
     }
