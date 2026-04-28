@@ -455,17 +455,23 @@ function Test-ForUpdates {
     }
 }
 
-# --- TỰ ĐỘNG DỌN DẸP SHORTCUT CŨ BỊ LỖI ---
+# --- TỰ ĐỘNG SỬA SHORTCUT CŨ BỊ LỖI ---
 function Repair-OldShortcuts {
     $batFolder = Join-Path $Global:AppPath "Shortcuts"
     if (-not (Test-Path $batFolder)) { return }
     
+    $scriptPath = Join-Path $Global:AppPath "ZaloMulti.ps1"
     $batFiles = Get-ChildItem $batFolder -Filter *.bat -ErrorAction SilentlyContinue
     foreach ($bat in $batFiles) {
         $content = Get-Content $bat.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
-        # Nếu file .bat chứa mã nguồn hàm (dấu hiệu bị lỗi) hoặc chứa ký tự `?` thay cho tiếng Việt
-        if ($content -match "param\(" -or $content -match "\?") {
-            Remove-Item $bat.FullName -Force -ErrorAction SilentlyContinue
+        # Nếu file .bat chứa mã nguồn hàm (dấu hiệu bị lỗi) hoặc không bắt đầu bằng @echo off
+        $isBroken = ($content -match "param\(") -or ($content -match "try \{") -or (-not ($content -match "^@echo off"))
+        if ($isBroken) {
+            # Lấy tên tài khoản từ tên file .bat
+            $accountName = [System.IO.Path]::GetFileNameWithoutExtension($bat.Name)
+            # Tạo lại nội dung .bat đúng
+            $fixedContent = "@echo off`nstart `"`" powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -LaunchInstance `"$accountName`""
+            $fixedContent | Set-Content $bat.FullName -Force -Encoding UTF8
         }
     }
 }
