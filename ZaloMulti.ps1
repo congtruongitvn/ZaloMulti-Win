@@ -23,7 +23,7 @@ if ($consolePtr -ne [IntPtr]::Zero) {
 }
 
 # Cấu hình toàn cầu
-$Global:Version = "1.1.0" # Nâng cấp trải nghiệm người dùng
+$Global:Version = "2.0.0" # Phiên bản hoàn thiện
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
@@ -474,6 +474,7 @@ function Update-AppUIList {
     $Global:InstanceGrid.Children.Clear()
     $profiles = Get-ChildItem $Global:ProfileRoot | Where-Object { $_.PSIsContainer } | Sort-Object CreationTime
     $count = 0
+    $activeCount = 0
     foreach ($p in $profiles) {
         $name = $p.Name
         $count++
@@ -520,10 +521,15 @@ function Update-AppUIList {
         $delBorder.Tag = $name
         $delBorder.Add_MouseDown({
             $targetName = $this.Tag
-            $msg = "Để xóa tài khoản '$targetName', hệ thống sẽ đóng Zalo và xóa dữ liệu vĩnh viễn. Bạn có đồng ý không?"
+            $msg = "Để xóa tài khoản '$targetName', hệ thống sẽ đóng phiên Zalo này và xóa dữ liệu vĩnh viễn. Bạn có đồng ý không?"
             if ([System.Windows.MessageBox]::Show($msg, "Xác nhận xóa", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Warning) -eq "Yes") {
                 try {
-                    Get-Process Zalo -ErrorAction SilentlyContinue | Stop-Process -Force
+                    # Chỉ đóng Zalo của profile này (dùng PID), không đóng tất cả
+                    $pidFile = Join-Path (Join-Path $Global:ProfileRoot $targetName) "pid.txt"
+                    if (Test-Path $pidFile) {
+                        $savedPid = (Get-Content $pidFile -Raw -ErrorAction SilentlyContinue).Trim()
+                        if ($savedPid) { Stop-Process -Id $savedPid -Force -ErrorAction SilentlyContinue }
+                    }
                     Start-Sleep -Milliseconds 500
                     Remove-Item -Path (Join-Path $Global:ProfileRoot $targetName) -Recurse -Force
                     # Xóa Shortcut liên quan
@@ -581,6 +587,7 @@ function Update-AppUIList {
         $statusLabel = New-Object System.Windows.Controls.TextBlock
         $statusLabel.FontSize = 11; $statusLabel.VerticalAlignment = "Center"; $statusLabel.Margin = "5,0,0,0"
         if ($isRunning) {
+            $activeCount++
             $statusDot.Text = "●"; $statusDot.Foreground = [System.Windows.Media.Brushes]::LimeGreen; $statusDot.FontSize = 14
             $statusLabel.Text = "Đang hoạt động"; $statusLabel.Foreground = [System.Windows.Media.Brushes]::LimeGreen
         } else {
@@ -623,6 +630,8 @@ function Update-AppUIList {
         $border.Child = $cardStack
         $Global:InstanceGrid.Children.Add($border)
     }
+    # Cập nhật số lượng tài khoản đang hoạt động trên tiêu đề
+    $Global:TxtVersion.Text = "Phiên bản $Global:Version • $activeCount/$count đang mở"
 }
 
 # Áp dụng cài đặt ban đầu
@@ -702,4 +711,12 @@ Test-ForUpdates
 Repair-OldShortcuts
 Update-AppUIList
 $Global:TxtVersion.Text = "Phiên bản $Global:Version"
+
+# --- TỰ ĐỘNG LÀM MỚI TRẠNG THÁI MỖI 5 GIÂY ---
+$Global:RefreshTimer = New-Object System.Windows.Threading.DispatcherTimer
+$Global:RefreshTimer.Interval = [TimeSpan]::FromSeconds(5)
+$Global:RefreshTimer.Add_Tick({ Update-AppUIList })
+$Global:RefreshTimer.Start()
+
 $Global:window.ShowDialog() | Out-Null
+$Global:RefreshTimer.Stop()

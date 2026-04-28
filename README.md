@@ -1,4 +1,4 @@
-# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop (v1.1.0)
+# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop (v2.0.0)
 
 **ZalỏMulti** là một công cụ mạnh mẽ, gọn nhẹ và thẩm mỹ dành cho người dùng Windows, giúp quản lý và chạy đồng thời nhiều tài khoản Zalo Desktop trên cùng một máy tính một cách dễ dàng.
 
@@ -14,6 +14,12 @@
   <img src="Assets/zalo_09_Nau.ico" width="48" height="48" />
   <img src="Assets/zalo_10_XamBac.ico" width="48" height="48" />
 </p>
+
+## ✨ Tính năng mới (Cập nhật 28/04/2026 - v2.0.0)
+- **Tự động làm mới trạng thái**: Giao diện tự cập nhật mỗi 5 giây, hiển thị 🟢/⚫ chính xác theo thời gian thực.
+- **Bộ đếm tài khoản**: Hiển số lượng tài khoản đang mở ngay trên thanh phiên bản (ví dụ: "2/5 đang mở").
+- **Xóa thông minh**: Khi xóa tài khoản, chỉ đóng đúng phiên Zalo của tài khoản đó, không ảnh hưởng đến các tài khoản khác.
+- **Dọn dẹp**: Loại bỏ `ZaloTransfer.ps1` (chức năng đã tích hợp sẵn trong ứng dụng chính).
 
 ## ✨ Tính năng mới (Cập nhật 28/04/2026 - v1.1.0)
 - **Trạng thái tài khoản (🟢/⚫)**: Hiển thị trực quan trên mỗi thẻ xem Zalo đang mở hay đã đóng.
