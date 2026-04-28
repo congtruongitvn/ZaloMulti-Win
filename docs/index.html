@@ -337,6 +337,24 @@
                         <p>Windows 10 và Windows 11 (64-bit). Cần PowerShell 5.1 trở lên (đã có sẵn trên Windows).</p>
                     </div>
                 </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                        Cơ chế đăng nhập nhiều tài khoản hoạt động như thế nào?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>ZalỏMulti sử dụng kỹ thuật <strong>Điều hướng biến môi trường (Environment Variables Redirection)</strong>. Mỗi tài khoản được tạo một thư mục riêng, sau đó khi mở Zalo, ứng dụng sẽ trỏ các biến <code>USERPROFILE</code>, <code>APPDATA</code>, <code>LOCALAPPDATA</code> vào thư mục đó. Zalo nghĩ rằng nó đang chạy trên một người dùng Windows mới — hoàn toàn độc lập, không can thiệp vào mã nguồn hay crack Zalo gốc.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+                        Zalo đồng bộ tin nhắn bị lỗi / thất bại khi dùng Clone?
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Đây là hành vi bình thường của Zalo. Khi đăng nhập trên profile Clone lần đầu, Zalo coi đó là thiết bị mới nên cần thời gian đồng bộ lại. <strong>Hãy đợi 5–10 phút</strong> sau khi đăng nhập, không tắt Zalo giữa chừng. Nếu vẫn thất bại, hãy đăng xuất rồi đăng nhập lại.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

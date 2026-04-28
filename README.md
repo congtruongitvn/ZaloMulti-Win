@@ -129,6 +129,8 @@ Nếu bạn gặp lỗi trong quá trình sử dụng, hãy thử các cách sau
 2. **Unblock file**: Click chuột phải vào file `.zip` vừa tải về (hoặc thư mục đã giải nén), chọn **Properties**, tick vào ô **Unblock** ở dưới cùng rồi nhấn **OK**.
 3. **Quyền thực thi**: Mở PowerShell với quyền Admin và chạy lệnh: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` sau đó chọn `Y`.
 4. **Zalo Desktop**: Đảm bảo bạn đã cài đặt bản Zalo Desktop chính thức từ trang chủ.
+5. **Zalo đồng bộ tin nhắn thất bại**: Đây là hành vi bình thường. Khi đăng nhập trên profile Clone lần đầu, Zalo coi đó là thiết bị mới nên cần thời gian đồng bộ lại. Hãy **đợi 5–10 phút** sau khi đăng nhập, không tắt Zalo giữa chừng. Nếu vẫn thất bại, hãy đăng xuất rồi đăng nhập lại.
+6. **Cơ chế đăng nhập nhiều tài khoản**: ZalỏMulti sử dụng kỹ thuật **Điều hướng biến môi trường** (Environment Variables Redirection). Mỗi tài khoản được tạo một thư mục riêng, khi mở Zalo ứng dụng sẽ trỏ các biến `USERPROFILE`, `APPDATA`, `LOCALAPPDATA` vào thư mục đó. Zalo nghĩ rằng nó đang chạy trên một người dùng Windows mới — hoàn toàn độc lập, không can thiệp hay crack Zalo gốc.
 
 ## 🤝 Đóng góp & Liên hệ
 

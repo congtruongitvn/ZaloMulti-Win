@@ -440,7 +440,7 @@ nav.scrolled { background: rgba(5, 5, 16, 0.95); }
     transition: max-height 0.3s ease, padding 0.3s ease;
 }
 .faq-item.open .faq-answer {
-    max-height: 200px; padding: 0 24px 20px;
+    max-height: 400px; padding: 0 24px 20px;
 }
 .faq-answer p { color: var(--text-sec); font-size: 0.9rem; line-height: 1.7; }
 .faq-answer code {
