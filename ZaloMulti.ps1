@@ -354,6 +354,13 @@ function Update-AppSilently {
         $wc = New-Object System.Net.WebClient
         $wc.DownloadFile($remoteScriptUrl, $tempFile)
         
+        # Kiểm tra tính toàn vẹn của file tải về
+        $tempContent = Get-Content $tempFile -Raw -Encoding UTF8
+        if ($tempContent.Length -lt 10000 -or $tempContent -notmatch "ZALỎMULTI") {
+            [System.Windows.MessageBox]::Show("Bản tải xuống bị lỗi hoặc không đầy đủ. Quá trình cập nhật đã bị hủy để bảo đảm an toàn.", "Lỗi cập nhật", 0, 16)
+            return
+        }
+        
         $currentScript = $MyInvocation.MyCommand.Definition
         $updateBat = Join-Path $env:TEMP "update_zalo_multi.bat"
         $batContent = @"
@@ -364,7 +371,10 @@ move /y "$tempFile" "$currentScript"
 start "" powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "$currentScript"
 del "%~f0"
 "@
-        [System.IO.File]::WriteAllText($updateBat, $batContent, [System.Text.Encoding]::ASCII)
+        # Ghi file .bat với định dạng UTF-8 không BOM để tránh lỗi đường dẫn tiếng Việt
+        $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+        [System.IO.File]::WriteAllText($updateBat, $batContent, $utf8NoBom)
+        
         Start-Process $updateBat -WindowStyle Hidden
         $Global:window.Close()
         exit
@@ -390,12 +400,17 @@ function Test-ForUpdates {
     Wait-Job $job -Timeout 2 | Out-Null
     $remoteVersion = Receive-Job $job
     
-    if ($remoteVersion -and $remoteVersion -gt $Global:Version) {
-        $msg = "Đã có phiên bản mới ($remoteVersion).`n`nBạn có muốn cập nhật tự động ngay bây giờ không?`n(Ứng dụng sẽ tự khởi động lại sau khi xong)"
-        $res = [System.Windows.MessageBox]::Show($msg, "Bản cập nhật mới", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Information)
-        if ($res -eq "Yes") {
-            Update-AppSilently
-        }
+    if ($remoteVersion -match '^\d+\.\d+\.\d+$') {
+        try {
+            # Ép kiểu sang [version] để so sánh chính xác (vd: 1.0.10 > 1.0.9)
+            if ([version]$remoteVersion -gt [version]$Global:Version) {
+                $msg = "Đã có phiên bản mới ($remoteVersion).`n`nBạn có muốn cập nhật tự động ngay bây giờ không?`n(Ứng dụng sẽ tự khởi động lại sau khi cập nhật xong)"
+                $res = [System.Windows.MessageBox]::Show($msg, "Bản cập nhật mới", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Information)
+                if ($res -eq "Yes") {
+                    Update-AppSilently
+                }
+            }
+        } catch { }
     }
 }
 
