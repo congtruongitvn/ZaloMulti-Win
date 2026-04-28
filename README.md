@@ -1,4 +1,4 @@
-# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop (v1.0.3)
+# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop (v1.1.0)
 
 **ZalỏMulti** là một công cụ mạnh mẽ, gọn nhẹ và thẩm mỹ dành cho người dùng Windows, giúp quản lý và chạy đồng thời nhiều tài khoản Zalo Desktop trên cùng một máy tính một cách dễ dàng.
 
@@ -14,6 +14,12 @@
   <img src="Assets/zalo_09_Nau.ico" width="48" height="48" />
   <img src="Assets/zalo_10_XamBac.ico" width="48" height="48" />
 </p>
+
+## ✨ Tính năng mới (Cập nhật 28/04/2026 - v1.1.0)
+- **Trạng thái tài khoản (🟢/⚫)**: Hiển thị trực quan trên mỗi thẻ xem Zalo đang mở hay đã đóng.
+- **Cập nhật toàn diện (ZIP-based)**: Hệ thống cập nhật mới có thể tải và thay thế toàn bộ file (XAML, Assets, Script) thay vì chỉ 1 file duy nhất.
+- **Hiện Changelog khi cập nhật**: Hộp thoại cập nhật giờ hiển thị danh sách thay đổi để người dùng biết có gì mới trước khi đồng ý.
+- **Đồng bộ Shortcut khi đổi/xóa tên**: Khi đổi tên hoặc xóa tài khoản, Shortcut trên Desktop và file `.bat` trung gian sẽ tự động được cập nhật theo.
 
 ## ✨ Tính năng mới (Cập nhật 28/04/2026 - v1.0.3)
 - **Sửa lỗi Shortcut không mở được Zalo**: Khắc phục triệt để lỗi file `.bat` chứa sai nội dung khiến Shortcut ngoài Desktop không hoạt động.

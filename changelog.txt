@@ -1,0 +1,5 @@
+- Trạng thái tài khoản: Hiện 🟢/⚫ cho biết Zalo đang mở hay đã đóng.
+- Cập nhật toàn diện: Hỗ trợ tải ZIP cập nhật tất cả file (XAML, Assets...).
+- Hiệu ứng giao diện: Hover sáng viền, nút loading khi mở Zalo.
+- Tự động dọn dẹp Shortcut cũ bị lỗi từ phiên bản trước.
+- Xóa/đổi tên tài khoản sẽ tự động cập nhật Shortcut tương ứng.

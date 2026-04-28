@@ -23,7 +23,7 @@ if ($consolePtr -ne [IntPtr]::Zero) {
 }
 
 # Cấu hình toàn cầu
-$Global:Version = "1.0.3" # Sửa lỗi Shortcut + nâng cấp cập nhật
+$Global:Version = "1.1.0" # Nâng cấp trải nghiệm người dùng
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
@@ -341,30 +341,81 @@ function Start-ZaloInstance {
     $processInfo.EnvironmentVariables["LOCALAPPDATA"] = $localPath
     
     try {
-        [System.Diagnostics.Process]::Start($processInfo) | Out-Null
+        $proc = [System.Diagnostics.Process]::Start($processInfo)
+        # Lưu PID để theo dõi trạng thái
+        if ($proc) {
+            $proc.Id | Set-Content (Join-Path $profilePath "pid.txt") -Force -Encoding ASCII
+        }
     } catch {
         [System.Windows.MessageBox]::Show("Không thể khởi chạy Zalo: $($_.Exception.Message)", "Lỗi", 0, 16)
     }
 }
 
-# --- CƠ CHẾ CẬP NHẬT TỰ ĐỘNG ---
+# Kiểm tra trạng thái tài khoản (đang mở hay đã đóng)
+function Get-AccountStatus {
+    param($profileDir)
+    $pidFile = Join-Path $profileDir "pid.txt"
+    if (Test-Path $pidFile) {
+        $pid = (Get-Content $pidFile -Raw -ErrorAction SilentlyContinue).Trim()
+        if ($pid -and (Get-Process -Id $pid -ErrorAction SilentlyContinue)) {
+            return $true
+        }
+    }
+    return $false
+}
+
+# --- CƠ CHẾ CẬP NHẬT TỰ ĐỘNG (ZIP-based) ---
 function Update-AppSilently {
-    $remoteScriptUrl = "https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/ZaloMulti.ps1"
-    $tempFile = Join-Path $env:TEMP "ZaloMulti_new.ps1"
+    $repoBase = "https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main"
+    $tempZip = Join-Path $env:TEMP "ZaloMulti_update.zip"
+    $tempExtract = Join-Path $env:TEMP "ZaloMulti_update"
+    
     try {
         $wc = New-Object System.Net.WebClient
-        $wc.DownloadFile($remoteScriptUrl, $tempFile)
         
-        # Kiểm tra tính toàn vẹn của file tải về
-        $tempContent = Get-Content $tempFile -Raw -Encoding UTF8
-        if ($tempContent.Length -lt 10000 -or $tempContent -notmatch "ZALỎMULTI") {
-            [System.Windows.MessageBox]::Show("Bản tải xuống bị lỗi hoặc không đầy đủ. Quá trình cập nhật đã bị hủy để bảo đảm an toàn.", "Lỗi cập nhật", 0, 16)
-            return
-        }
+        # Thử tải file ZIP trước (cập nhật toàn diện)
+        $zipUrl = "$repoBase/update.zip"
+        $useZip = $true
+        try { $wc.DownloadFile($zipUrl, $tempZip) } catch { $useZip = $false }
         
-        $currentScript = Join-Path $Global:AppPath "ZaloMulti.ps1"
-        $updateBat = Join-Path $env:TEMP "update_zalo_multi.bat"
-        $batContent = @"
+        if ($useZip -and (Test-Path $tempZip) -and (Get-Item $tempZip).Length -gt 5000) {
+            # Giải nén vào thư mục tạm
+            if (Test-Path $tempExtract) { Remove-Item $tempExtract -Recurse -Force }
+            Expand-Archive -Path $tempZip -DestinationPath $tempExtract -Force
+            
+            # Tạo file .bat để copy đè và khởi động lại
+            $currentScript = Join-Path $Global:AppPath "ZaloMulti.ps1"
+            $updateBat = Join-Path $env:TEMP "update_zalo_multi.bat"
+            $batContent = @"
+@echo off
+title Dang cap nhat ZaloMulti...
+timeout /t 1 /nobreak > nul
+xcopy /s /y /q "$tempExtract\*" "$($Global:AppPath)\"
+start "" powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "$currentScript"
+rmdir /s /q "$tempExtract"
+del "$tempZip"
+del "%~f0"
+"@
+            $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+            [System.IO.File]::WriteAllText($updateBat, $batContent, $utf8NoBom)
+            Start-Process $updateBat -WindowStyle Hidden
+            $Global:window.Close()
+            exit
+        } else {
+            # Fallback: Cập nhật chỉ file .ps1 (tương thích ngược)
+            $remoteScriptUrl = "$repoBase/ZaloMulti.ps1"
+            $tempFile = Join-Path $env:TEMP "ZaloMulti_new.ps1"
+            $wc.DownloadFile($remoteScriptUrl, $tempFile)
+            
+            $tempContent = Get-Content $tempFile -Raw -Encoding UTF8
+            if ($tempContent.Length -lt 10000 -or $tempContent -notmatch "ZALỎMULTI") {
+                [System.Windows.MessageBox]::Show("Bản tải xuống bị lỗi. Quá trình cập nhật đã bị hủy.", "Lỗi cập nhật", 0, 16)
+                return
+            }
+            
+            $currentScript = Join-Path $Global:AppPath "ZaloMulti.ps1"
+            $updateBat = Join-Path $env:TEMP "update_zalo_multi.bat"
+            $batContent = @"
 @echo off
 title Dang cap nhat ZaloMulti...
 timeout /t 1 /nobreak > nul
@@ -372,40 +423,44 @@ move /y "$tempFile" "$currentScript"
 start "" powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File "$currentScript"
 del "%~f0"
 "@
-        # Ghi file .bat với định dạng UTF-8 không BOM để tránh lỗi đường dẫn tiếng Việt
-        $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-        [System.IO.File]::WriteAllText($updateBat, $batContent, $utf8NoBom)
-        
-        Start-Process $updateBat -WindowStyle Hidden
-        $Global:window.Close()
-        exit
+            $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+            [System.IO.File]::WriteAllText($updateBat, $batContent, $utf8NoBom)
+            Start-Process $updateBat -WindowStyle Hidden
+            $Global:window.Close()
+            exit
+        }
     } catch {
         [System.Windows.MessageBox]::Show("Lỗi khi tải bản cập nhật: $($_.Exception.Message)")
     }
 }
 
 function Test-ForUpdates {
-    $remoteVersionUrl = "https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main/version.txt"
+    $repoBase = "https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main"
     
     # Chạy ngầm việc kiểm tra để không làm chậm lúc mở app
     Start-Job -ScriptBlock {
-        param($url)
+        param($baseUrl)
         try {
-            $val = (Invoke-RestMethod -Uri $url -TimeoutSec 5).Trim()
-            return $val
+            $ver = (Invoke-RestMethod -Uri "$baseUrl/version.txt" -TimeoutSec 5).Trim()
+            $log = $null
+            try { $log = (Invoke-RestMethod -Uri "$baseUrl/changelog.txt" -TimeoutSec 3).Trim() } catch { }
+            return @{ Version = $ver; Changelog = $log }
         } catch { return $null }
-    } -ArgumentList $remoteVersionUrl | Out-Null
+    } -ArgumentList $repoBase | Out-Null
     
-    # Đợi tối đa 2 giây để lấy version
+    # Đợi tối đa 3 giây để lấy thông tin
     $job = Get-Job | Sort-Object ID -Descending | Select-Object -First 1
-    Wait-Job $job -Timeout 2 | Out-Null
-    $remoteVersion = Receive-Job $job
+    Wait-Job $job -Timeout 3 | Out-Null
+    $result = Receive-Job $job
     
-    if ($remoteVersion -match '^\d+\.\d+\.\d+$') {
+    if ($result -and $result.Version -match '^\d+\.\d+\.\d+$') {
         try {
-            # Ép kiểu sang [version] để so sánh chính xác (vd: 1.0.10 > 1.0.9)
-            if ([version]$remoteVersion -gt [version]$Global:Version) {
-                $msg = "Đã có phiên bản mới ($remoteVersion).`n`nBạn có muốn cập nhật tự động ngay bây giờ không?`n(Ứng dụng sẽ tự khởi động lại sau khi cập nhật xong)"
+            if ([version]$result.Version -gt [version]$Global:Version) {
+                $msg = "Đã có phiên bản mới ($($result.Version)).`n"
+                if ($result.Changelog) {
+                    $msg += "`n📋 Có gì mới:`n$($result.Changelog)`n"
+                }
+                $msg += "`nBạn có muốn cập nhật ngay không?`n(Ứng dụng sẽ tự khởi động lại sau khi cập nhật xong)"
                 $res = [System.Windows.MessageBox]::Show($msg, "Bản cập nhật mới", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Information)
                 if ($res -eq "Yes") {
                     Update-AppSilently
@@ -441,6 +496,7 @@ function Update-AppUIList {
         $phonePath = Join-Path $profileDir "phone.txt"
         $currentPhone = "Nhập số ĐT tài khoản này"
         if (Test-Path $phonePath) { $currentPhone = (Get-Content $phonePath -Raw -Encoding UTF8).Trim() }
+        $isRunning = Get-AccountStatus $profileDir
 
         $border = New-Object System.Windows.Controls.Border
         $border.SetResourceReference([System.Windows.Controls.Border]::BackgroundProperty, "BgCard")
@@ -485,6 +541,11 @@ function Update-AppUIList {
                     Get-Process Zalo -ErrorAction SilentlyContinue | Stop-Process -Force
                     Start-Sleep -Milliseconds 500
                     Remove-Item -Path (Join-Path $Global:ProfileRoot $targetName) -Recurse -Force
+                    # Xóa Shortcut liên quan
+                    $batPath = Join-Path (Join-Path $Global:AppPath "Shortcuts") "$targetName.bat"
+                    $lnkPath = Join-Path ([Environment]::GetFolderPath("Desktop")) "$targetName.lnk"
+                    if (Test-Path $batPath) { Remove-Item $batPath -Force -ErrorAction SilentlyContinue }
+                    if (Test-Path $lnkPath) { Remove-Item $lnkPath -Force -ErrorAction SilentlyContinue }
                     Update-AppUIList
                 } catch { [System.Windows.MessageBox]::Show("Lỗi: $($_.Exception.Message)") }
             }
@@ -497,6 +558,12 @@ function Update-AppUIList {
             if ($newName -and $newName -ne $oldName.ToUpper()) {
                 if (-not (Test-Path (Join-Path $Global:ProfileRoot $newName))) {
                     Rename-Item -Path (Join-Path $Global:ProfileRoot $oldName) -NewName $newName -Force
+                    # Cập nhật Shortcut khi đổi tên
+                    $batFolder = Join-Path $Global:AppPath "Shortcuts"
+                    $oldBat = Join-Path $batFolder "$oldName.bat"
+                    $oldLnk = Join-Path ([Environment]::GetFolderPath("Desktop")) "$oldName.lnk"
+                    if (Test-Path $oldBat) { Remove-Item $oldBat -Force -ErrorAction SilentlyContinue }
+                    if (Test-Path $oldLnk) { Remove-Item $oldLnk -Force -ErrorAction SilentlyContinue }
                     Update-AppUIList
                 }
             }
@@ -521,6 +588,21 @@ function Update-AppUIList {
             $this.Text.Trim() | Set-Content (Join-Path $this.Tag "phone.txt") -Force -Encoding UTF8
         })
         $grid.Children.Add($phonePrefix); $grid.Children.Add($phoneBox)
+
+        # Badge trạng thái tài khoản
+        $statusPanel = New-Object System.Windows.Controls.StackPanel
+        $statusPanel.Orientation = "Horizontal"; $statusPanel.Margin = "0,0,0,10"
+        $statusDot = New-Object System.Windows.Controls.TextBlock
+        $statusLabel = New-Object System.Windows.Controls.TextBlock
+        $statusLabel.FontSize = 11; $statusLabel.VerticalAlignment = "Center"; $statusLabel.Margin = "5,0,0,0"
+        if ($isRunning) {
+            $statusDot.Text = "●"; $statusDot.Foreground = [System.Windows.Media.Brushes]::LimeGreen; $statusDot.FontSize = 14
+            $statusLabel.Text = "Đang hoạt động"; $statusLabel.Foreground = [System.Windows.Media.Brushes]::LimeGreen
+        } else {
+            $statusDot.Text = "●"; $statusDot.Foreground = [System.Windows.Media.Brushes]::Gray; $statusDot.FontSize = 14
+            $statusLabel.Text = "Chưa mở"; $statusLabel.SetResourceReference([System.Windows.Controls.TextBlock]::ForegroundProperty, "TextSec")
+        }
+        $statusPanel.Children.Add($statusDot); $statusPanel.Children.Add($statusLabel)
 
         $launchBtn = New-Object System.Windows.Controls.Button
         $launchBtn.Content = "MỞ TÀI KHOẢN"; $launchBtn.Style = $Global:window.Resources["RoundBtn"]
@@ -552,7 +634,7 @@ function Update-AppUIList {
             $this.BorderThickness = [System.Windows.Thickness]::new(1)
         })
         
-        $cardStack.Children.Add($headerGrid); $cardStack.Children.Add($grid); $cardStack.Children.Add($launchBtn)
+        $cardStack.Children.Add($headerGrid); $cardStack.Children.Add($grid); $cardStack.Children.Add($statusPanel); $cardStack.Children.Add($launchBtn)
         $border.Child = $cardStack
         $Global:InstanceGrid.Children.Add($border)
     }
