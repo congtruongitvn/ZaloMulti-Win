@@ -23,7 +23,7 @@ if ($consolePtr -ne [IntPtr]::Zero) {
 }
 
 # Cấu hình toàn cầu
-$Global:Version = "1.0.2" # Phiên bản mới sửa lỗi shortcut
+$Global:Version = "1.0.3" # Sửa lỗi Shortcut + nâng cấp cập nhật
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
@@ -284,7 +284,8 @@ function New-AppShortcut {
         if (-not (Test-Path $batFolder)) { New-Item -ItemType Directory -Path $batFolder -Force | Out-Null }
         $batPath = Join-Path $batFolder "$name.bat"
         
-        $batContent = "@echo off`nstart `"`" powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$($MyInvocation.MyCommand.Definition)`" -LaunchInstance `"$name`""
+        $scriptPath = Join-Path $Global:AppPath "ZaloMulti.ps1"
+        $batContent = "@echo off`nstart `"`" powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -LaunchInstance `"$name`""
         $batContent | Set-Content $batPath -Force -Encoding UTF8
 
         $WshShell = New-Object -ComObject WScript.Shell
@@ -361,7 +362,7 @@ function Update-AppSilently {
             return
         }
         
-        $currentScript = $MyInvocation.MyCommand.Definition
+        $currentScript = Join-Path $Global:AppPath "ZaloMulti.ps1"
         $updateBat = Join-Path $env:TEMP "update_zalo_multi.bat"
         $batContent = @"
 @echo off
@@ -411,6 +412,21 @@ function Test-ForUpdates {
                 }
             }
         } catch { }
+    }
+}
+
+# --- TỰ ĐỘNG DỌN DẸP SHORTCUT CŨ BỊ LỖI ---
+function Repair-OldShortcuts {
+    $batFolder = Join-Path $Global:AppPath "Shortcuts"
+    if (-not (Test-Path $batFolder)) { return }
+    
+    $batFiles = Get-ChildItem $batFolder -Filter *.bat -ErrorAction SilentlyContinue
+    foreach ($bat in $batFiles) {
+        $content = Get-Content $bat.FullName -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+        # Nếu file .bat chứa mã nguồn hàm (dấu hiệu bị lỗi) hoặc chứa ký tự `?` thay cho tiếng Việt
+        if ($content -match "param\(" -or $content -match "\?") {
+            Remove-Item $bat.FullName -Force -ErrorAction SilentlyContinue
+        }
     }
 }
 
@@ -509,7 +525,32 @@ function Update-AppUIList {
         $launchBtn = New-Object System.Windows.Controls.Button
         $launchBtn.Content = "MỞ TÀI KHOẢN"; $launchBtn.Style = $Global:window.Resources["RoundBtn"]
         $launchBtn.Tag = $name; $launchBtn.Width = 270
-        $launchBtn.Add_Click({ Start-ZaloInstance $this.Tag })
+        $launchBtn.Add_Click({
+            $btn = $this
+            $originalText = $btn.Content
+            $btn.Content = "Đang mở..."; $btn.IsEnabled = $false
+            Start-ZaloInstance $btn.Tag
+            # Khôi phục nút sau 2 giây
+            $timer = New-Object System.Windows.Threading.DispatcherTimer
+            $timer.Interval = [TimeSpan]::FromSeconds(2)
+            $timer.Tag = @{ Button = $btn; Text = $originalText }
+            $timer.Add_Tick({
+                $this.Tag.Button.Content = $this.Tag.Text
+                $this.Tag.Button.IsEnabled = $true
+                $this.Stop()
+            })
+            $timer.Start()
+        })
+        
+        # Hover effect cho thẻ tài khoản
+        $border.Add_MouseEnter({
+            $this.BorderBrush = $Global:window.Resources["AccentBlue"]
+            $this.BorderThickness = [System.Windows.Thickness]::new(1.5)
+        })
+        $border.Add_MouseLeave({
+            $this.SetResourceReference([System.Windows.Controls.Border]::BorderBrushProperty, "BorderBrush")
+            $this.BorderThickness = [System.Windows.Thickness]::new(1)
+        })
         
         $cardStack.Children.Add($headerGrid); $cardStack.Children.Add($grid); $cardStack.Children.Add($launchBtn)
         $border.Child = $cardStack
@@ -591,6 +632,7 @@ for ($i=0; $i -lt $allArgs.Count; $i++) {
 }
 
 Test-ForUpdates
+Repair-OldShortcuts
 Update-AppUIList
 $Global:TxtVersion.Text = "Phiên bản $Global:Version"
 $Global:window.ShowDialog() | Out-Null

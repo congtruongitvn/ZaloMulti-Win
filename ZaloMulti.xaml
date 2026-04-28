@@ -134,7 +134,7 @@
                             <Image Name="ImgLogo" Width="40" Height="40" Stretch="Uniform"/>
                             <StackPanel Margin="15,0,0,0">
                                 <TextBlock Text="ZalỏMulti" FontSize="20" FontWeight="Bold" Foreground="{DynamicResource TextMain}"/>
-                                <TextBlock Name="TxtVersion" Text="Phiên bản 7x7=59" FontSize="12" Foreground="{DynamicResource TextSec}" Cursor="Hand"/>
+                                <TextBlock Name="TxtVersion" Text="Đang tải..." FontSize="12" Foreground="{DynamicResource TextSec}" Cursor="Hand"/>
                             </StackPanel>
                         </StackPanel>
 

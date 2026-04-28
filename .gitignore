@@ -1,8 +1,16 @@
 # ZaloMulti GitIgnore
 
-# Profiles and User Data
-C:/Zalo_Clone_Profiles/
-desktop_profiles/
+# Dữ liệu cá nhân & cấu hình riêng máy
+settings.json
+custom_path.txt
+desktop_profiles.json
+profiles_config.json
+
+# Thư mục chứa file .bat sinh tự động
+Shortcuts/
+
+# Ghi chú nội bộ
+lessons_learned.md
 
 # PowerShell temporary files
 *.log
