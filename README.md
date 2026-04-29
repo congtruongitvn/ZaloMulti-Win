@@ -1,5 +1,23 @@
 # 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop (v2.0.2)
 
+<p align="center">
+  <img src="Assets/zalo_01_Do.ico" width="64" height="64" alt="ZaloMulti" />
+</p>
+
+<p align="center">
+  <strong>Nguyễn Công Trường</strong><br>
+  Digital Marketing Specialist · Retail Operations · Open Source Developer
+</p>
+
+<p align="center">
+  <a href="https://nct88.github.io/portfolio/">🌐 Portfolio</a> ·
+  <a href="https://nct88.github.io/portfolio/donate/">❤️ Ủng hộ</a> ·
+  <a href="https://t.me/congtruongit">💬 Telegram</a> ·
+  <a href="https://fb.me/congtruongit">📘 Facebook</a>
+</p>
+
+---
+
 **ZalỏMulti** là một công cụ mạnh mẽ, gọn nhẹ và thẩm mỹ dành cho người dùng Windows, giúp quản lý và chạy đồng thời nhiều tài khoản Zalo Desktop trên cùng một máy tính một cách dễ dàng.
 
 <p align="center">
