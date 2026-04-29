@@ -131,16 +131,8 @@ if ($launchIdx -ge 0) {
                 $randomHash = [System.Guid]::NewGuid().ToString("n")
                 "$randomPart1.$timestamp.$randomHash" | Set-Content $zuFile -Force -Encoding ASCII
             }
-
-            # Chỉ tạo deviceId khi chưa có (tránh Zalo coi là thiết bị mới)
+            # [REMOVED v2.0.4] Zalo tu tao device identity
             $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-            # [REMOVED v2.0.4] Zalo tu tao device identity - khong can tao storage.json
-    # $storagePath = Join-Path $zaloDataPath "storage.json"
-            if (-not (Test-Path $storagePath)) {
-                $deviceId = [System.Guid]::NewGuid().ToString().ToUpper()
-                $storageContent = @{ deviceId = $deviceId } | ConvertTo-Json -Compress
-                [System.IO.File]::WriteAllText($storagePath, $storageContent, $utf8NoBom)
-            }
 
             $configPath = Join-Path $zaloDataPath "config.json"
             if (-not (Test-Path $configPath)) {
