@@ -1,3 +1,4 @@
-- Khởi chạy Zalo từ Shortcut cực nhanh (không load giao diện).
-- Sửa lỗi con trỏ chuột xoay xoay nhấp nháy khi mở từ Shortcut.
-- Tối ưu hiệu suất: Script thoát ngay sau khi mở Zalo, không chạy ngầm.
+v2.0.3 - Fix sao luu, Pin to Start, dong bo DT
+- Sua loi sao luu file .zlp bi bao loi .zip
+- Ho tro Pin to Start cho shortcut nhan ban
+- Khong ghi de deviceId moi lan mo -> dong bo DT on dinh

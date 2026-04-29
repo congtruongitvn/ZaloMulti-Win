@@ -4,6 +4,12 @@ Tất cả thay đổi đáng chú ý của dự án được ghi lại tại đ
 
 ---
 
+## v2.0.3 — 29/04/2026
+
+- **Sửa lỗi sao lưu**: Khắc phục lỗi `".zip is not a supported archive file format"` khi sao lưu file `.zlp`. Nguyên nhân do `Compress-Archive` chỉ chấp nhận đuôi `.zip` — giờ nén ra `.zip` tạm rồi đổi tên.
+- **Hỗ trợ Pin to Start**: Shortcut giờ trỏ thẳng đến `powershell.exe` thay vì `cmd.exe`, và tự động copy vào thư mục Start Menu → người dùng có thể Pin to Start bình thường.
+- **Sửa lỗi đồng bộ dữ liệu từ điện thoại**: Không còn tạo lại `deviceId` và `z_u.txt` mới mỗi lần mở Zalo — chỉ tạo một lần khi profile mới. Khắc phục triệt để lỗi Zalo server coi mỗi lần mở là thiết bị mới, gây mất đồng bộ.
+
 ## v2.0.2 — 28/04/2026
 
 - **Khởi chạy từ Shortcut cực nhanh**: Khi mở Zalo từ Desktop, script không load giao diện XAML nữa mà chạy trực tiếp → mở Zalo gần như tức thì.

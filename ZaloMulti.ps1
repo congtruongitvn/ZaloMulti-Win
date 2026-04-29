@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # ZALỎMULTI - PHIÊN BẢN HOÀN THIỆN
 # BẢN QUYỀN TRUONG.IT
 # ============================================================
@@ -25,7 +25,7 @@ trap {
 }
 
 # Cấu hình toàn cầu
-$Global:Version = "2.0.2" # Tối ưu khởi chạy từ Shortcut
+$Global:Version = "2.0.3" # Fix sao lưu, pin to Start, đồng bộ ĐT
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
@@ -123,19 +123,28 @@ if ($launchIdx -ge 0) {
             if (-not (Test-Path $localPath)) { New-Item -ItemType Directory -Path $localPath -Force | Out-Null }
             if (-not (Test-Path $zaloDataPath)) { New-Item -ItemType Directory -Path $zaloDataPath -Force | Out-Null }
 
-            $randomPart1 = -join ((1..19) | ForEach-Object { Get-Random -Minimum 0 -Maximum 10 })
-            $timestamp = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
-            $randomHash = [System.Guid]::NewGuid().ToString("n")
-            "$randomPart1.$timestamp.$randomHash" | Set-Content (Join-Path $roamingPath "z_u.txt") -Force -Encoding ASCII
+            # Chỉ tạo z_u.txt khi chưa có (giữ session token để đồng bộ ĐT)
+            $zuFile = Join-Path $roamingPath "z_u.txt"
+            if (-not (Test-Path $zuFile)) {
+                $randomPart1 = -join ((1..19) | ForEach-Object { Get-Random -Minimum 0 -Maximum 10 })
+                $timestamp = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
+                $randomHash = [System.Guid]::NewGuid().ToString("n")
+                "$randomPart1.$timestamp.$randomHash" | Set-Content $zuFile -Force -Encoding ASCII
+            }
 
-            $deviceId = [System.Guid]::NewGuid().ToString().ToUpper()
-            $storageContent = @{ deviceId = $deviceId } | ConvertTo-Json -Compress
+            # Chỉ tạo deviceId khi chưa có (tránh Zalo coi là thiết bị mới)
             $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-            [System.IO.File]::WriteAllText((Join-Path $zaloDataPath "storage.json"), $storageContent, $utf8NoBom)
+            $storagePath = Join-Path $zaloDataPath "storage.json"
+            if (-not (Test-Path $storagePath)) {
+                $deviceId = [System.Guid]::NewGuid().ToString().ToUpper()
+                $storageContent = @{ deviceId = $deviceId } | ConvertTo-Json -Compress
+                [System.IO.File]::WriteAllText($storagePath, $storageContent, $utf8NoBom)
+            }
 
             $configPath = Join-Path $zaloDataPath "config.json"
             if (-not (Test-Path $configPath)) {
-                $configContent = @{ zalo_installed = $timestamp } | ConvertTo-Json -Compress
+                $tsNow = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
+                $configContent = @{ zalo_installed = $tsNow } | ConvertTo-Json -Compress
                 [System.IO.File]::WriteAllText($configPath, $configContent, $utf8NoBom)
             }
 
@@ -245,7 +254,14 @@ function Export-ProfileUI {
                 $sourcePath = Join-Path $Global:ProfileRoot $name
                 $destZip = $save.FileName
                 [System.Windows.MessageBox]::Show("Đang sao lưu... Vui lòng chờ.`nQuá trình này có thể mất vài phút tùy dung lượng.", "Sao lưu", 0, 64)
-                Compress-Archive -Path "$sourcePath\*" -DestinationPath $destZip -Force
+                # Compress-Archive yêu cầu đuôi .zip → nén ra .zip tạm rồi đổi tên
+                $tempZipFile = [System.IO.Path]::ChangeExtension($destZip, ".zip")
+                if (Test-Path $tempZipFile) { Remove-Item $tempZipFile -Force }
+                Compress-Archive -Path "$sourcePath\*" -DestinationPath $tempZipFile -Force
+                if ($tempZipFile -ne $destZip) {
+                    if (Test-Path $destZip) { Remove-Item $destZip -Force }
+                    Move-Item -Path $tempZipFile -Destination $destZip -Force
+                }
                 [System.Windows.MessageBox]::Show("Sao lưu thành công!`n$destZip", "Hoàn tất", 0, 64)
             } catch {
                 [System.Windows.MessageBox]::Show("Lỗi khi sao lưu:`n$($_.Exception.Message)", "Lỗi sao lưu", 0, 16)
@@ -395,8 +411,9 @@ function New-AppShortcut {
 
         $WshShell = New-Object -ComObject WScript.Shell
         $Shortcut = $WshShell.CreateShortcut($ShortcutPath)
-        $Shortcut.TargetPath = "cmd.exe"
-        $Shortcut.Arguments = "/c `"$batPath`""
+        # Dùng powershell.exe trực tiếp thay vì cmd.exe → cho phép Pin to Start
+        $Shortcut.TargetPath = "powershell.exe"
+        $Shortcut.Arguments = "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -LaunchInstance `"$name`""
         $Shortcut.WindowStyle = 7
         $Shortcut.Description = $name
         
@@ -405,7 +422,13 @@ function New-AppShortcut {
             if ($icons.Count -gt 0) { $Shortcut.IconLocation = $icons[$index % $icons.Count].FullName }
         }
         $Shortcut.Save()
-        [System.Windows.MessageBox]::Show("Đã tạo lối tắt cho '$name' ngoài Desktop.")
+        # Copy vào Start Menu để cho phép Pin to Start
+        try {
+            $startMenuPath = Join-Path $env:APPDATA "Microsoft\Windows\Start Menu\Programs"
+            $startMenuLnk = Join-Path $startMenuPath "$safeName.lnk"
+            Copy-Item $ShortcutPath $startMenuLnk -Force
+        } catch { }
+        [System.Windows.MessageBox]::Show("Đã tạo lối tắt cho '$name' ngoài Desktop.`nBạn có thể Pin to Start từ menu Start.")
     } catch {
         [System.Windows.MessageBox]::Show("Lỗi khi tạo shortcut: $($_.Exception.Message)")
     }
@@ -422,20 +445,29 @@ function Start-ZaloInstance {
     if (-not (Test-Path $localPath)) { New-Item -ItemType Directory -Path $localPath -Force | Out-Null }
     if (-not (Test-Path $zaloDataPath)) { New-Item -ItemType Directory -Path $zaloDataPath -Force | Out-Null }
 
-    $randomPart1 = -join ((1..19) | ForEach-Object { Get-Random -Minimum 0 -Maximum 10 })
-    $timestamp = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
-    $randomHash = [System.Guid]::NewGuid().ToString("n")
-    $zuContent = "$randomPart1.$timestamp.$randomHash"
-    $zuContent | Set-Content (Join-Path $roamingPath "z_u.txt") -Force -Encoding ASCII
+    # Chỉ tạo z_u.txt khi chưa có (giữ session token để đồng bộ ĐT)
+    $zuFile = Join-Path $roamingPath "z_u.txt"
+    if (-not (Test-Path $zuFile)) {
+        $randomPart1 = -join ((1..19) | ForEach-Object { Get-Random -Minimum 0 -Maximum 10 })
+        $timestamp = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
+        $randomHash = [System.Guid]::NewGuid().ToString("n")
+        $zuContent = "$randomPart1.$timestamp.$randomHash"
+        $zuContent | Set-Content $zuFile -Force -Encoding ASCII
+    }
 
-    $deviceId = [System.Guid]::NewGuid().ToString().ToUpper()
-    $storageContent = @{ deviceId = $deviceId } | ConvertTo-Json -Compress
+    # Chỉ tạo deviceId khi chưa có (tránh Zalo coi là thiết bị mới)
     $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-    [System.IO.File]::WriteAllText((Join-Path $zaloDataPath "storage.json"), $storageContent, $utf8NoBom)
+    $storagePath = Join-Path $zaloDataPath "storage.json"
+    if (-not (Test-Path $storagePath)) {
+        $deviceId = [System.Guid]::NewGuid().ToString().ToUpper()
+        $storageContent = @{ deviceId = $deviceId } | ConvertTo-Json -Compress
+        [System.IO.File]::WriteAllText($storagePath, $storageContent, $utf8NoBom)
+    }
 
     $configPath = Join-Path $zaloDataPath "config.json"
     if (-not (Test-Path $configPath)) {
-        $configContent = @{ zalo_installed = $timestamp } | ConvertTo-Json -Compress
+        $tsNow = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
+        $configContent = @{ zalo_installed = $tsNow } | ConvertTo-Json -Compress
         [System.IO.File]::WriteAllText($configPath, $configContent, $utf8NoBom)
     }
 
