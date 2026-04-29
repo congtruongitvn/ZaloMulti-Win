@@ -504,7 +504,7 @@ function Get-AccountStatus {
 
 # --- CƠ CHẾ CẬP NHẬT TỰ ĐỘNG (ZIP-based) ---
 function Update-AppSilently {
-    $repoBase = "https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main"
+    $repoBase = "https://raw.githubusercontent.com/nct88/ZaloMulti-Win/main"
     $tempZip = Join-Path $env:TEMP "ZaloMulti_update.zip"
     $tempExtract = Join-Path $env:TEMP "ZaloMulti_update"
     
@@ -558,7 +558,7 @@ function Update-AppSilently {
 }
 
 function Test-ForUpdates {
-    $repoBase = "https://raw.githubusercontent.com/congtruongitvn/ZaloMulti-Win/main"
+    $repoBase = "https://raw.githubusercontent.com/nct88/ZaloMulti-Win/main"
     
     # Chạy ngầm việc kiểm tra để không làm chậm lúc mở app
     Start-Job -ScriptBlock {
