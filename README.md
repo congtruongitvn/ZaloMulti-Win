@@ -1,87 +1,87 @@
-# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop
+# ðŸš€ Zalá»Multi - Quáº£n lÃ½ Ä‘a tÃ i khoáº£n Zalo Desktop
 
 <p align="center">
   <img src="Assets/zalo_01_Do.ico" width="64" height="64" alt="ZaloMulti" />
 </p>
 
 <p align="center">
-  <strong>Nguyễn Công Trường</strong><br>
-  Digital Marketing Specialist · Retail Operations · Open Source Developer
+  <strong>Nguyá»…n CÃ´ng TrÆ°á»ng</strong><br>
+  Digital Marketing Specialist Â· Retail Operations Â· Open Source Developer
 </p>
 
 <p align="center">
-  <a href="https://nct88.github.io/portfolio/">🌐 Portfolio</a> ·
-  <a href="https://d.truong.it/donate">❤️ Ủng hộ</a> ·
-  <a href="https://t.me/congtruongit">💬 Telegram</a> ·
-  <a href="https://fb.me/congtruongit">📘 Facebook</a>
+  <a href="https://nct88.github.io/portfolio/">ðŸŒ Portfolio</a> Â·
+  <a href="https://d.truong.it/donate">â¤ï¸ á»¦ng há»™</a> Â·
+  <a href="https://t.me/congtruongit">ðŸ’¬ Telegram</a> Â·
+  <a href="https://fb.me/congtruongit">ðŸ“˜ Facebook</a>
 </p>
 
 ---
 
-**ZalỏMulti** là một công cụ mạnh mẽ, gọn nhẹ và thẩm mỹ dành cho người dùng Windows, giúp quản lý và chạy đồng thời nhiều tài khoản Zalo Desktop trên cùng một máy tính một cách dễ dàng.
+**Zalá»Multi** lÃ  má»™t cÃ´ng cá»¥ máº¡nh máº½, gá»n nháº¹ vÃ  tháº©m má»¹ dÃ nh cho ngÆ°á»i dÃ¹ng Windows, giÃºp quáº£n lÃ½ vÃ  cháº¡y Ä‘á»“ng thá»i nhiá»u tÃ i khoáº£n Zalo Desktop trÃªn cÃ¹ng má»™t mÃ¡y tÃ­nh má»™t cÃ¡ch dá»… dÃ ng.
 
 
 
-## ✨ Tính năng nổi bật
+## âœ¨ TÃ­nh nÄƒng ná»•i báº­t
 
-- **Quản lý không giới hạn**: Thêm, xóa và đặt tên cho từng tài khoản Zalo riêng biệt.
-- **Dữ liệu độc lập**: Mỗi tài khoản hoạt động trong một môi trường (Profile) riêng, không lo bị đăng xuất hoặc chồng chéo dữ liệu.
-- **Giao diện hiện đại (Modern UI)**: Thiết kế chuẩn Glassmorphism, hỗ trợ Chế độ Sáng (Light) và Tối (Dark).
-- **Shortcut tiện lợi**: Tự động tạo biểu tượng ngoài Desktop cho từng tài khoản để truy cập nhanh.
-- **Cập nhật tự động**: Tự kiểm tra và thông báo khi có phiên bản mới từ GitHub.
-- **Đóng nhanh**: Chức năng đóng tất cả các phiên làm việc Zalo chỉ với 1 cú click.
+- **Quáº£n lÃ½ khÃ´ng giá»›i háº¡n**: ThÃªm, xÃ³a vÃ  Ä‘áº·t tÃªn cho tá»«ng tÃ i khoáº£n Zalo riÃªng biá»‡t.
+- **Dá»¯ liá»‡u Ä‘á»™c láº­p**: Má»—i tÃ i khoáº£n hoáº¡t Ä‘á»™ng trong má»™t mÃ´i trÆ°á»ng (Profile) riÃªng, khÃ´ng lo bá»‹ Ä‘Äƒng xuáº¥t hoáº·c chá»“ng chÃ©o dá»¯ liá»‡u.
+- **Giao diá»‡n hiá»‡n Ä‘áº¡i (Modern UI)**: Thiáº¿t káº¿ chuáº©n Glassmorphism, há»— trá»£ Cháº¿ Ä‘á»™ SÃ¡ng (Light) vÃ  Tá»‘i (Dark).
+- **Shortcut tiá»‡n lá»£i**: Tá»± Ä‘á»™ng táº¡o biá»ƒu tÆ°á»£ng ngoÃ i Desktop cho tá»«ng tÃ i khoáº£n Ä‘á»ƒ truy cáº­p nhanh.
+- **Cáº­p nháº­t tá»± Ä‘á»™ng**: Tá»± kiá»ƒm tra vÃ  thÃ´ng bÃ¡o khi cÃ³ phiÃªn báº£n má»›i tá»« GitHub.
+- **ÄÃ³ng nhanh**: Chá»©c nÄƒng Ä‘Ã³ng táº¥t cáº£ cÃ¡c phiÃªn lÃ m viá»‡c Zalo chá»‰ vá»›i 1 cÃº click.
 
-## 🛠 Yêu cầu hệ thống
+## ðŸ›  YÃªu cáº§u há»‡ thá»‘ng
 
-- **Hệ điều hành**: Windows 10/11.
-- **Zalo Desktop**: Đã cài đặt phiên bản chính thức từ [Zalo.me](https://zalo.me/pc).
-- **PowerShell**: Phiên bản 5.1 trở lên (có sẵn trên Windows).
+- **Há»‡ Ä‘iá»u hÃ nh**: Windows 10/11.
+- **Zalo Desktop**: ÄÃ£ cÃ i Ä‘áº·t phiÃªn báº£n chÃ­nh thá»©c tá»« [Zalo.me](https://zalo.me/pc).
+- **PowerShell**: PhiÃªn báº£n 5.1 trá»Ÿ lÃªn (cÃ³ sáºµn trÃªn Windows).
 
-## 🚀 Hướng dẫn sử dụng
+## ðŸš€ HÆ°á»›ng dáº«n sá»­ dá»¥ng
 
-1. **Tải về**: Tải toàn bộ thư mục từ [GitHub](https://github.com/nct88/ZaloMulti-Win/archive/refs/heads/main.zip).
-2. **Khởi chạy**: Nhấn đúp vào file `ZaloMulti.bat`.
-3. **Thêm tài khoản**: Nhấn "Thêm tài khoản", nhập tên và bắt đầu sử dụng.
-4. **Mở Zalo**: Nhấn "MỞ TÀI KHOẢN" trên thẻ tương ứng.
+1. **Táº£i vá»**: Táº£i toÃ n bá»™ thÆ° má»¥c tá»« [GitHub](https://github.com/nct88/ZaloMulti-Win/archive/refs/heads/main.zip).
+2. **Khá»Ÿi cháº¡y**: Nháº¥n Ä‘Ãºp vÃ o file `ZaloMulti.exe`.
+3. **ThÃªm tÃ i khoáº£n**: Nháº¥n "ThÃªm tÃ i khoáº£n", nháº­p tÃªn vÃ  báº¯t Ä‘áº§u sá»­ dá»¥ng.
+4. **Má»Ÿ Zalo**: Nháº¥n "Má»ž TÃ€I KHOáº¢N" trÃªn tháº» tÆ°Æ¡ng á»©ng.
 
-## 📂 Cấu trúc dự án
+## ðŸ“‚ Cáº¥u trÃºc dá»± Ã¡n
 
-- **`ZaloMulti.ps1`**: Mã nguồn chính (PowerShell)
-- **`ZaloMulti.xaml`**: Giao diện người dùng (WPF)
-- **`ZaloMulti.bat`**: File khởi động nhanh
-- **`CHANGELOG.md`**: Nhật ký phiên bản
-- **`docs/`**: Trang giới thiệu (GitHub Pages)
-- **`Assets/`**: Tài nguyên (Font, Icon, Images)
+- **`ZaloMulti.ps1`**: MÃ£ nguá»“n chÃ­nh (PowerShell)
+- **`ZaloMulti.xaml`**: Giao diá»‡n ngÆ°á»i dÃ¹ng (WPF)
+- **`ZaloMulti.exe`**: File khá»Ÿi Ä‘á»™ng nhanh
+- **`CHANGELOG.md`**: Nháº­t kÃ½ phiÃªn báº£n
+- **`docs/`**: Trang giá»›i thiá»‡u (GitHub Pages)
+- **`Assets/`**: TÃ i nguyÃªn (Font, Icon, Images)
 
-## ❓ Xử lý sự cố
+## â“ Xá»­ lÃ½ sá»± cá»‘
 
-- **Lỗi ký tự lạ / cú pháp**: Mở `ZaloMulti.ps1` → Save As → Encoding **UTF-8 with BOM**.
-- **Không chạy được**: Chuột phải vào file `.zip` tải về → Properties → tick **Unblock** → OK.
-- **Lỗi quyền thực thi**: Chạy lệnh `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` trong cửa sổ PowerShell.
-- **Không gõ được tiếng Việt**: Khởi động lại Unikey hoặc chuyển sang phần mềm EVKey.
-- **Đồng bộ tin nhắn chậm**: Đợi 5–10 phút sau đăng nhập, không tắt Zalo giữa chừng.
+- **Lá»—i kÃ½ tá»± láº¡ / cÃº phÃ¡p**: Má»Ÿ `ZaloMulti.ps1` â†’ Save As â†’ Encoding **UTF-8 with BOM**.
+- **KhÃ´ng cháº¡y Ä‘Æ°á»£c**: Chuá»™t pháº£i vÃ o file `.zip` táº£i vá» â†’ Properties â†’ tick **Unblock** â†’ OK.
+- **Lá»—i quyá»n thá»±c thi**: Cháº¡y lá»‡nh `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` trong cá»­a sá»• PowerShell.
+- **KhÃ´ng gÃµ Ä‘Æ°á»£c tiáº¿ng Viá»‡t**: Khá»Ÿi Ä‘á»™ng láº¡i Unikey hoáº·c chuyá»ƒn sang pháº§n má»m EVKey.
+- **Äá»“ng bá»™ tin nháº¯n cháº­m**: Äá»£i 5â€“10 phÃºt sau Ä‘Äƒng nháº­p, khÃ´ng táº¯t Zalo giá»¯a chá»«ng.
 
-## 📋 Nhật ký phiên bản
+## ðŸ“‹ Nháº­t kÃ½ phiÃªn báº£n
 
-Xem chi tiết tất cả các thay đổi qua từng phiên bản:
+Xem chi tiáº¿t táº¥t cáº£ cÃ¡c thay Ä‘á»•i qua tá»«ng phiÃªn báº£n:
 
-👉 **[CHANGELOG.md](CHANGELOG.md)** · **[Xem trên trang giới thiệu](https://nct88.github.io/ZaloMulti-Win/#changelog)**
+ðŸ‘‰ **[CHANGELOG.md](CHANGELOG.md)** Â· **[Xem trÃªn trang giá»›i thiá»‡u](https://nct88.github.io/ZaloMulti-Win/#changelog)**
 
-## 🤝 Đóng góp & Liên hệ
+## ðŸ¤ ÄÃ³ng gÃ³p & LiÃªn há»‡
 
-Nếu bạn thấy công cụ này hữu ích, hãy để lại một **Star** ⭐ trên GitHub!
+Náº¿u báº¡n tháº¥y cÃ´ng cá»¥ nÃ y há»¯u Ã­ch, hÃ£y Ä‘á»ƒ láº¡i má»™t **Star** â­ trÃªn GitHub!
 
-- 🌐 **Website**: [truong.it](https://truong.it)
-- 💬 **Telegram**: [@congtruongit](https://t.me/congtruongit)
-- 📘 **Facebook**: [congtruongit](https://fb.me/congtruongit)
-- 🐙 **GitHub**: [nct88](https://github.com/nct88)
-
----
-
-### ❤️ Ủng hộ
-
-Nếu bạn thấy dự án hữu ích, hãy cân nhắc [ủng hộ truong.it](https://d.truong.it/donate) để tôi tiếp tục tạo ra những sản phẩm giá trị cho cộng đồng.
+- ðŸŒ **Website**: [truong.it](https://truong.it)
+- ðŸ’¬ **Telegram**: [@congtruongit](https://t.me/congtruongit)
+- ðŸ“˜ **Facebook**: [congtruongit](https://fb.me/congtruongit)
+- ðŸ™ **GitHub**: [nct88](https://github.com/nct88)
 
 ---
 
-*Bản quyền © 2026 bởi truong.it. Phát triển với đam mê.*
+### â¤ï¸ á»¦ng há»™
+
+Náº¿u báº¡n tháº¥y dá»± Ã¡n há»¯u Ã­ch, hÃ£y cÃ¢n nháº¯c [á»§ng há»™ truong.it](https://d.truong.it/donate) Ä‘á»ƒ tÃ´i tiáº¿p tá»¥c táº¡o ra nhá»¯ng sáº£n pháº©m giÃ¡ trá»‹ cho cá»™ng Ä‘á»“ng.
+
+---
+
+*Báº£n quyá»n Â© 2026 bá»Ÿi truong.it. PhÃ¡t triá»ƒn vá»›i Ä‘am mÃª.*

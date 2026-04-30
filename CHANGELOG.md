@@ -4,6 +4,12 @@ Tất cả thay đổi đáng chú ý của dự án được ghi lại tại đ
 
 ---
 
+## v2.0.7 — 01/05/2026
+
+- **Làm mới giao diện (macOS Style)**: Tinh chỉnh lại toàn bộ bảng màu nền, đổi nút `Đóng ứng dụng` thành 3 nút tròn điều khiển (Close, Minimize, Maximize) mang hơi hướng macOS.
+- **Tối ưu nút bấm**: Thu nhỏ độ bo góc (`CornerRadius`) của giao diện từ 24 xuống 10, thay đổi ngôn từ chức năng "Nhập" thành "Khôi phục".
+- **Biên dịch định dạng EXE**: Tích hợp công cụ gói ứng dụng `ZaloMulti.exe` mới với biểu tượng Zalo mặc định, thay thế cho file script hoặc .bat đơn điệu.
+
 ## v2.0.6 — 01/05/2026
 
 - **Tối ưu hiển thị**: Giao diện chế độ Sáng/Tối chuyển đổi mượt mà hơn, độ tương phản văn bản được tăng cường giúp đọc rõ ràng hơn trên cả 2 màu.

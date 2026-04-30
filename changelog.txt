@@ -1,1 +1,3 @@
-﻿Sửa lỗi crash font, tối ưu giao diện Sáng/Tối, nâng cấp bảo mật
+﻿- Nâng cấp giao diện sáng tối và nút bấm chuẩn macOS
+Sửa lỗi crash font, tối ưu giao diện Sáng/Tối, nâng cấp bảo mật
+
