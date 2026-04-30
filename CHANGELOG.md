@@ -4,6 +4,14 @@ Tất cả thay đổi đáng chú ý của dự án được ghi lại tại đ
 
 ---
 
+## v2.0.5 — 30/04/2026
+
+- **Sửa lỗi Crash khi khởi chạy**: Khắc phục lỗi `Value cannot be null: encoding` ngăn cản ứng dụng tạo hoặc mở tài khoản clone.
+
+## v2.0.4 — 29/04/2026
+
+- **Theo dõi trạng thái chính xác**: Khắc phục lỗi hiển thị sai trạng thái do Zalo Electron tạo nhiều tiến trình con. Hệ thống giờ đây có thể theo dõi danh sách PID chính xác để hiển thị trạng thái `Đang hoạt động`.
+
 ## v2.0.3 — 29/04/2026
 
 - **Sửa lỗi sao lưu**: Khắc phục lỗi `".zip is not a supported archive file format"` khi sao lưu file `.zlp`. Nguyên nhân do `Compress-Archive` chỉ chấp nhận đuôi `.zip` — giờ nén ra `.zip` tạm rồi đổi tên.

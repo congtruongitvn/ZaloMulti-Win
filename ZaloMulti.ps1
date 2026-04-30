@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 # ZALỎMULTI - PHIÊN BẢN HOÀN THIỆN
 # BẢN QUYỀN TRUONG.IT
 # ============================================================
@@ -25,7 +25,7 @@ trap {
 }
 
 # Cấu hình toàn cầu
-$Global:Version = "2.0.4" # Fix sao lưu, pin to Start, đồng bộ ĐT
+$Global:Version = "2.0.5" # Fix lỗi crash encoding null khi mở tài khoản
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
@@ -467,6 +467,7 @@ function Start-ZaloInstance {
     if (-not (Test-Path $configPath)) {
         $tsNow = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
         $configContent = @{ zalo_installed = $tsNow } | ConvertTo-Json -Compress
+        $utf8NoBom = New-Object System.Text.UTF8Encoding $false
         [System.IO.File]::WriteAllText($configPath, $configContent, $utf8NoBom)
     }
 

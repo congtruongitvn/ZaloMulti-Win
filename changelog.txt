@@ -1,1 +1,1 @@
-﻿v2.0.4: Fix theo doi trang thai tai khoan, ho tro nhieu PID Electron
+v2.0.5: Fix loi crash khi mo Zalo Clone (Value cannot be null: encoding)
