@@ -572,37 +572,51 @@ function Update-AppSilently {
 function Test-ForUpdates {
     $repoBase = "https://raw.githubusercontent.com/nct88/ZaloMulti-Win/main"
     
-    # Chạy ngầm việc kiểm tra để không làm chậm lúc mở app
-    Start-Job -ScriptBlock {
+    # Sử dụng Runspace để chạy ngầm hoàn toàn bất đồng bộ, không làm chậm UI
+    $ps = [powershell]::Create()
+    [void]$ps.AddScript({
         param($baseUrl)
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
         try {
-            $ver = (Invoke-RestMethod -Uri "$baseUrl/version.txt" -TimeoutSec 5).Trim()
+            $cacheBust = [Guid]::NewGuid().ToString("N")
+            $ver = (Invoke-RestMethod -Uri "$baseUrl/version.txt?t=$cacheBust" -UseBasicParsing -TimeoutSec 10).Trim()
             $log = $null
-            try { $log = (Invoke-RestMethod -Uri "$baseUrl/changelog.txt" -TimeoutSec 3).Trim() } catch { }
+            try { $log = (Invoke-RestMethod -Uri "$baseUrl/changelog.txt?t=$cacheBust" -UseBasicParsing -TimeoutSec 10).Trim() } catch { }
             return @{ Version = $ver; Changelog = $log }
         } catch { return $null }
-    } -ArgumentList $repoBase | Out-Null
+    }).AddArgument($repoBase)
     
-    # Đợi tối đa 3 giây để lấy thông tin
-    $job = Get-Job | Sort-Object ID -Descending | Select-Object -First 1
-    Wait-Job $job -Timeout 3 | Out-Null
-    $result = Receive-Job $job
+    $asyncResult = $ps.BeginInvoke()
     
-    if ($result -and $result.Version -match '^\d+\.\d+\.\d+$') {
-        try {
-            if ([version]$result.Version -gt [version]$Global:Version) {
-                $msg = "Đã có phiên bản mới ($($result.Version)).`n"
-                if ($result.Changelog) {
-                    $msg += "`n📋 Có gì mới:`n$($result.Changelog)`n"
-                }
-                $msg += "`nBạn có muốn cập nhật ngay không?`n(Ứng dụng sẽ tự khởi động lại sau khi cập nhật xong)"
-                $res = [System.Windows.MessageBox]::Show($msg, "Bản cập nhật mới", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Information)
-                if ($res -eq "Yes") {
-                    Update-AppSilently
-                }
+    # Kiểm tra kết quả ngầm sau mỗi 2 giây
+    $Global:UpdateTimer = New-Object System.Windows.Threading.DispatcherTimer
+    $Global:UpdateTimer.Interval = [TimeSpan]::FromSeconds(2)
+    $Global:UpdateTimer.Tag = @{ PS = $ps; Async = $asyncResult }
+    $Global:UpdateTimer.Add_Tick({
+        $state = $this.Tag
+        if ($state.Async.IsCompleted) {
+            $this.Stop()
+            $res = $state.PS.EndInvoke($state.Async)
+            $state.PS.Dispose()
+            $result = $res | Select-Object -First 1
+            if ($result -and $result.Version -match '^\d+\.\d+\.\d+$') {
+                try {
+                    if ([version]$result.Version -gt [version]$Global:Version) {
+                        $msg = "Đã có phiên bản mới ($($result.Version)).`n"
+                        if ($result.Changelog) {
+                            $msg += "`n📋 Có gì mới:`n$($result.Changelog)`n"
+                        }
+                        $msg += "`nBạn có muốn cập nhật ngay không?`n(Ứng dụng sẽ tự tải về và khởi động lại sau khi xong)"
+                        $resBox = [System.Windows.MessageBox]::Show($msg, "Bản cập nhật mới", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Information)
+                        if ($resBox -eq "Yes") {
+                            Update-AppSilently
+                        }
+                    }
+                } catch { }
             }
-        } catch { }
-    }
+        }
+    })
+    $Global:UpdateTimer.Start()
 }
 
 # --- TỰ ĐỘNG SỬA SHORTCUT CŨ BỊ LỖI ---
