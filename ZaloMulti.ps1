@@ -924,6 +924,11 @@ $Global:BtnKillAll.Add_Click({
 })
 
 $Global:BtnClose.Add_Click({ $Global:window.Close() })
+$Global:window.FindName("BtnMin").Add_Click({ $Global:window.WindowState = 'Minimized' })
+$Global:window.FindName("BtnMax").Add_Click({ 
+    if ($Global:window.WindowState -eq 'Maximized') { $Global:window.WindowState = 'Normal' }
+    else { $Global:window.WindowState = 'Maximized' }
+})
 $Global:window.Add_MouseLeftButtonDown({ $this.DragMove() })
 
 # (Khởi chạy nhanh từ Shortcut đã được xử lý ở đầu script — xem FAST PATH)
