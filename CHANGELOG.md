@@ -4,6 +4,13 @@ Tất cả thay đổi đáng chú ý của dự án được ghi lại tại đ
 
 ---
 
+## v2.0.6 — 01/05/2026
+
+- **Tối ưu hiển thị**: Giao diện chế độ Sáng/Tối chuyển đổi mượt mà hơn, độ tương phản văn bản được tăng cường giúp đọc rõ ràng hơn trên cả 2 màu.
+- **Loại bỏ tính năng thừa**: Xóa bảng màu sắc (Pastel) theo phản hồi để giao diện gọn gàng hơn.
+- **Sửa lỗi khởi chạy**: Cải thiện thuật toán tìm font, tự động escape ký tự khoảng trắng trong thư mục cài đặt, sửa lỗi XAML bị crash (ZaloMulti gặp lỗi khởi động).
+- **Hệ thống bảo vệ (HWID)**: Bổ sung lớp bảo vệ mã nguồn. Tự động kiểm tra tính toàn vẹn của mã nguồn trên các thiết bị không xác định.
+
 ## v2.0.5 — 30/04/2026
 
 - **Sửa lỗi Crash khi khởi chạy**: Khắc phục lỗi `Value cannot be null: encoding` ngăn cản ứng dụng tạo hoặc mở tài khoản clone.

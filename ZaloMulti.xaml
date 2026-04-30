@@ -138,18 +138,7 @@
                             </StackPanel>
                         </StackPanel>
 
-                        <TextBlock Text="Thay đổi màu sắc" Foreground="{DynamicResource TextSec}" FontSize="14" Margin="0,0,0,10"/>
-                        <UniformGrid Columns="5" Margin="0,0,0,25">
-                            <Button Style="{DynamicResource ColorCircle}" Background="#74B9FF" Tag="#74B9FF" Name="Pal1"/>
-                            <Button Style="{DynamicResource ColorCircle}" Background="#A29BFE" Tag="#A29BFE" Name="Pal2"/>
-                            <Button Style="{DynamicResource ColorCircle}" Background="#55E6C1" Tag="#55E6C1" Name="Pal3"/>
-                            <Button Style="{DynamicResource ColorCircle}" Background="#FAB1A0" Tag="#FAB1A0" Name="Pal4"/>
-                            <Button Style="{DynamicResource ColorCircle}" Background="#FFEAA7" Tag="#FFEAA7" Name="Pal5"/>
-                            <Button Style="{DynamicResource ColorCircle}" Background="#81ECEC" Tag="#81ECEC" Name="Pal6"/>
-                            <Button Style="{DynamicResource ColorCircle}" Background="#E17055" Tag="#E17055" Name="Pal7"/>
-                            <Button Style="{DynamicResource ColorCircle}" Background="#FF7675" Tag="#FF7675" Name="Pal8"/>
-                            <Button Style="{DynamicResource ColorCircle}" Background="#6C5CE7" Tag="#6C5CE7" Name="Pal9"/>
-                        </UniformGrid>
+
                         
                         <Button Name="BtnAdd" Content="Thêm tài khoản" Style="{StaticResource AccentBtn}" FontSize="16" Margin="0,0,0,15"/>
                         

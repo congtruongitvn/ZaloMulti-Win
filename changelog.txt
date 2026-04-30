@@ -1,1 +1,1 @@
-v2.0.5: Fix loi crash khi mo Zalo Clone (Value cannot be null: encoding)
+﻿Sửa lỗi crash font, tối ưu giao diện Sáng/Tối, nâng cấp bảo mật

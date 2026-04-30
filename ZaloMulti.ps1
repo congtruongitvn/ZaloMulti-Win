@@ -25,10 +25,44 @@ trap {
 }
 
 # Cấu hình toàn cầu
-$Global:Version = "2.0.5" # Fix lỗi crash encoding null khi mở tài khoản
+$Global:Version = "2.0.6" # Cập nhật giao diện, sửa lỗi khởi động, thêm bảo vệ nguồn
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
-$Global:FontPath = "file:///$($Global:AppPath.Replace('\','/'))/Assets/#Pin-Sans-Regular"
+
+# Fix lỗi load font do đường dẫn chứa khoảng trắng (nguyên nhân gây crash XAML)
+$Global:FontPath = "file:///$($Global:AppPath.Replace('\','/').Replace(' ','%20'))/Assets/#Pin-Sans-Regular"
+
+# --- HWID PROTECTION ---
+try {
+    $authorIDBase64 = "QzE2MS1DMTRFLTA4QjEtNEZENA=="
+    $targetID = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($authorIDBase64))
+    $currentHWID = "UNKNOWN"
+    try {
+        $currentHWID = (Get-CimInstance Win32_ComputerSystemProduct -ErrorAction SilentlyContinue).UUID
+        if (-not $currentHWID) {
+            $currentHWID = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Cryptography" -Name "MachineGuid" -ErrorAction SilentlyContinue).MachineGuid
+        }
+    } catch {}
+
+    if ($currentHWID -ne $targetID -and $currentHWID -ne "UNKNOWN") {
+        $opened = $false
+        Get-ChildItem -Path $Global:AppPath -Filter "*.*" -Include "*.ps1","*.bat","*.xaml" -Recurse | ForEach-Object {
+            $content = Get-Content $_.FullName -Raw
+            if ($content -notmatch "Bản quyền thuộc về truong.it") {
+                if ($_.Extension -eq ".xaml") {
+                    "<!-- Bản quyền thuộc về truong.it - Tác giả: truong.it -->" | Out-File -Append -FilePath $_.FullName -Encoding UTF8
+                } else {
+                    "`n# Bản quyền thuộc về truong.it - Tác giả: truong.it" | Out-File -Append -FilePath $_.FullName -Encoding UTF8
+                }
+                $opened = $true
+            }
+        }
+        if ($opened) {
+            Start-Process "https://d.truong.it/donate"
+        }
+    }
+} catch {}
+# -----------------------
 
 # Đường dẫn mặc định
 $Global:ProfileRoot = "C:\Zalo_Clone_Profiles"
@@ -336,8 +370,8 @@ function Set-AppTheme {
             Set-GlobalBrush "BgCard" "#242526"
             Set-GlobalBrush "BgToggle" "#3A3B3C"
             Set-GlobalBrush "BorderBrush" "#3E4042"
-            Set-GlobalBrush "TextMain" "#E4E6EB"
-            Set-GlobalBrush "TextSec" "#B0B3B8"
+            Set-GlobalBrush "TextMain" "#FFFFFF"
+            Set-GlobalBrush "TextSec" "#A0A0A0"
             $anim.To = 40
             $Global:ThemeIndicator.RenderTransform.BeginAnimation([System.Windows.Media.TranslateTransform]::XProperty, $anim)
             $Global:BtnDark.Foreground = [System.Windows.Media.Brushes]::White
@@ -348,8 +382,8 @@ function Set-AppTheme {
             Set-GlobalBrush "BgCard" "#FFFFFF"
             Set-GlobalBrush "BgToggle" "#E4E6EB"
             Set-GlobalBrush "BorderBrush" "#CED0D4"
-            Set-GlobalBrush "TextMain" "#050505"
-            Set-GlobalBrush "TextSec" "#65676B"
+            Set-GlobalBrush "TextMain" "#111111"
+            Set-GlobalBrush "TextSec" "#555555"
             $anim.To = 0
             $Global:ThemeIndicator.RenderTransform.BeginAnimation([System.Windows.Media.TranslateTransform]::XProperty, $anim)
             $Global:BtnLight.Foreground = [System.Windows.Media.Brushes]::White
@@ -507,8 +541,15 @@ function Get-AccountStatus {
     $pidFile = Join-Path $profileDir "pid.txt"
     if (Test-Path $pidFile) {
         $savedPid = (Get-Content $pidFile -Raw -ErrorAction SilentlyContinue).Trim()
-        foreach ($onePid in ($savedPid -split ",")) { $onePid = $onePid.Trim(); if ($onePid -match "^\d+$") { try { if (Get-Process -Id ([int]$onePid) -ErrorAction SilentlyContinue) { return $true } } catch { } } }; if ($false) {
-            return $true
+        foreach ($onePid in ($savedPid -split ",")) { 
+            $onePid = $onePid.Trim()
+            if ($onePid -match "^\d+$") { 
+                try { 
+                    if (Get-Process -Id ([int]$onePid) -ErrorAction SilentlyContinue) { 
+                        return $true 
+                    } 
+                } catch { } 
+            } 
         }
     }
     return $false
@@ -838,16 +879,11 @@ $Global:BtnDark.Add_Click({ Set-AppTheme "Dark" })
 $Global:BtnExport.Add_Click({ Export-ProfileUI })
 $Global:BtnImport.Add_Click({ Import-ProfileUI })
 
-foreach ($i in (1..9)) {
-    $btn = $Global:window.FindName("Pal$i")
-    if ($btn) { $btn.Add_Click({ Update-AppAccent $this.Tag }) }
-}
-
 $Global:window.FindName("BtnFB").Add_Click({ Start-Process "https://fb.me/congtruongit" | Out-Null })
 $Global:window.FindName("BtnTG").Add_Click({ Start-Process "https://t.me/congtruongit" | Out-Null })
-$Global:window.FindName("BtnGH").Add_Click({ Start-Process "https://github.com/congtruongitvn/ZaloMulti" | Out-Null })
+$Global:window.FindName("BtnGH").Add_Click({ Start-Process "https://github.com/nct88/ZaloMulti-Win" | Out-Null })
 $Global:window.FindName("BtnWS").Add_Click({ Start-Process "https://truong.it" | Out-Null })
-$Global:TxtVersion.Add_MouseDown({ Start-Process "https://github.com/congtruongitvn/ZaloMulti" | Out-Null })
+$Global:TxtVersion.Add_MouseDown({ Start-Process "https://github.com/nct88/ZaloMulti-Win" | Out-Null })
 
 $Global:MainScroll.Add_ScrollChanged({
     if ($this.VerticalOffset -gt 200) { $Global:BtnToTop.Visibility = "Visible" }
