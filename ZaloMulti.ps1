@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 # ZALỎMULTI - PHIÊN BẢN HOÀN THIỆN
 # BẢN QUYỀN TRUONG.IT
 # ============================================================
@@ -49,11 +49,20 @@ try {
         Get-ChildItem -Path $Global:AppPath -Filter "*.*" -Include "*.ps1","*.bat","*.xaml" -Recurse | ForEach-Object {
             $content = Get-Content $_.FullName -Raw
             if ($content -notmatch "Bản quyền thuộc về truong.it") {
+                $appendStr = ""
                 if ($_.Extension -eq ".xaml") {
-                    "<!-- Bản quyền thuộc về truong.it - Tác giả: truong.it -->" | Out-File -Append -FilePath $_.FullName -Encoding UTF8
+                    $appendStr = "`r`n<!-- Bản quyền thuộc về truong.it - Tác giả: truong.it -->"
+                } elseif ($_.Extension -eq ".bat") {
+                    $appendStr = "`r`n:: Bản quyền thuộc về truong.it - Tác giả: truong.it"
                 } else {
-                    "`n# Bản quyền thuộc về truong.it - Tác giả: truong.it" | Out-File -Append -FilePath $_.FullName -Encoding UTF8
+                    $appendStr = "`r`n# Bản quyền thuộc về truong.it - Tác giả: truong.it"
                 }
+                try {
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes($appendStr)
+                    $stream = [System.IO.File]::Open($_.FullName, [System.IO.FileMode]::Append)
+                    $stream.Write($bytes, 0, $bytes.Length)
+                    $stream.Close()
+                } catch {}
                 $opened = $true
             }
         }
