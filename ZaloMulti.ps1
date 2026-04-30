@@ -45,7 +45,7 @@ try {
     } catch {}
 
     if ($currentHWID -ne $targetID -and $currentHWID -ne "UNKNOWN") {
-        $opened = $false
+
         Get-ChildItem -Path $Global:AppPath -Filter "*.*" -Include "*.ps1","*.bat","*.xaml" -Recurse | ForEach-Object {
             $content = Get-Content $_.FullName -Raw
             if ($content -notmatch "Bản quyền thuộc về truong.it") {
@@ -63,12 +63,9 @@ try {
                     $stream.Write($bytes, 0, $bytes.Length)
                     $stream.Close()
                 } catch {}
-                $opened = $true
             }
         }
-        if ($opened) {
-            Start-Process "https://d.truong.it/donate"
-        }
+        Start-Process "https://d.truong.it/donate"
     }
 } catch {}
 # -----------------------
