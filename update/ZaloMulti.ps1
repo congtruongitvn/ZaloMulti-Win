@@ -32,7 +32,7 @@ $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 # Fix lỗi load font do đường dẫn chứa khoảng trắng (nguyên nhân gây crash XAML)
 $Global:FontPath = "file:///$($Global:AppPath.Replace('\','/').Replace(' ','%20'))/Assets/#Pin-Sans-Regular"
 
-# --- BẢO VỆ BẢN QUYỀN HWID ---
+# --- HWID PROTECTION ---
 try {
     $authorIDBase64 = "QzE2MS1DMTRFLTA4QjEtNEZENA=="
     $targetID = [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($authorIDBase64))
@@ -75,7 +75,7 @@ $Global:ProfileRoot = "C:\Zalo_Clone_Profiles"
 $CustomPathFile = Join-Path $Global:AppPath "custom_path.txt"
 $Global:SettingsFile = Join-Path $Global:AppPath "settings.json"
 $Global:CurrentTheme = "Dark"
-$Global:CurrentAccent = "#007AFF"
+$Global:CurrentAccent = "#74B9FF"
 
 # Tải hoặc hỏi đường dẫn tùy chỉnh
 if (Test-Path $CustomPathFile) {
@@ -371,47 +371,25 @@ function Set-AppTheme {
         $anim.EasingFunction.EasingMode = "EaseInOut"
 
         if ($mode -eq "Dark") {
-            # macOS Dark Mode palette
-            Set-GlobalBrush "BgDark" "#1C1C1E"
+            Set-GlobalBrush "BgDark" "#1E1E1E"
             Set-GlobalBrush "BgSidebar" "#2C2C2E"
-            Set-GlobalBrush "BgCard" "#2C2C2E"
+            Set-GlobalBrush "BgCard" "#3A3A3C"
             Set-GlobalBrush "BgToggle" "#48484A"
-            Set-GlobalBrush "BorderBrush" "#3A3A3C"
+            Set-GlobalBrush "BorderBrush" "#38383A"
             Set-GlobalBrush "TextMain" "#FFFFFF"
-            Set-GlobalBrush "TextSec" "#98989D"
-            # Nút phụ (Sao lưu/Khôi phục) - nền tối, viền nhẹ
-            Set-GlobalBrush "SecondaryBtnBg" "#3A3A3C"
-            Set-GlobalBrush "SecondaryBtnFg" "#FFFFFF"
-            Set-GlobalBrush "SecondaryBtnBorder" "#48484A"
-            # Nút đóng tất cả - nền xanh, chữ trắng
-            Set-GlobalBrush "KillAllBtnBg" "#007AFF"
-            Set-GlobalBrush "KillAllBtnFg" "#FFFFFF"
-            # Nút mạng xã hội - nền xám, đổ bóng đen nhẹ
-            Set-GlobalBrush "SocialBtnBg" "#48484A"
-            try { $Global:window.Resources["SocialShadowColor"] = [System.Windows.Media.ColorConverter]::ConvertFromString("#40000000") } catch { }
+            Set-GlobalBrush "TextSec" "#8E8E93"
             $anim.To = 40
             $Global:ThemeIndicator.RenderTransform.BeginAnimation([System.Windows.Media.TranslateTransform]::XProperty, $anim)
             $Global:BtnDark.Foreground = [System.Windows.Media.Brushes]::White
             $Global:BtnLight.Foreground = $Global:window.Resources["TextSec"]
         } else {
-            # macOS Light Mode palette
-            Set-GlobalBrush "BgDark" "#F5F5F7"
-            Set-GlobalBrush "BgSidebar" "#E8E8ED"
+            Set-GlobalBrush "BgDark" "#F2F2F7"
+            Set-GlobalBrush "BgSidebar" "#E5E5EA"
             Set-GlobalBrush "BgCard" "#FFFFFF"
             Set-GlobalBrush "BgToggle" "#D1D1D6"
-            Set-GlobalBrush "BorderBrush" "#D2D2D7"
-            Set-GlobalBrush "TextMain" "#1D1D1F"
-            Set-GlobalBrush "TextSec" "#86868B"
-            # Nút phụ (Sao lưu/Khôi phục) - nền trắng, viền xám nhạt
-            Set-GlobalBrush "SecondaryBtnBg" "#FFFFFF"
-            Set-GlobalBrush "SecondaryBtnFg" "#1D1D1F"
-            Set-GlobalBrush "SecondaryBtnBorder" "#D2D2D7"
-            # Nút đóng tất cả - nền đỏ, chữ trắng
-            Set-GlobalBrush "KillAllBtnBg" "#FF3B30"
-            Set-GlobalBrush "KillAllBtnFg" "#FFFFFF"
-            # Nút mạng xã hội - nền trắng, đổ bóng xám nhẹ
-            Set-GlobalBrush "SocialBtnBg" "#FFFFFF"
-            try { $Global:window.Resources["SocialShadowColor"] = [System.Windows.Media.ColorConverter]::ConvertFromString("#30000000") } catch { }
+            Set-GlobalBrush "BorderBrush" "#C6C6C8"
+            Set-GlobalBrush "TextMain" "#000000"
+            Set-GlobalBrush "TextSec" "#8E8E93"
             $anim.To = 0
             $Global:ThemeIndicator.RenderTransform.BeginAnimation([System.Windows.Media.TranslateTransform]::XProperty, $anim)
             $Global:BtnLight.Foreground = [System.Windows.Media.Brushes]::White
@@ -426,11 +404,7 @@ function Update-AppAccent {
         $Global:CurrentAccent = $hex
         if (-not $isInitial) { Save-AppSettings }
         $c1 = [System.Drawing.ColorTranslator]::FromHtml($hex)
-        # Tạo gradient nhẹ cho nút accent
-        $darkerR = [Math]::Max(0, [int]($c1.R * 0.8))
-        $darkerG = [Math]::Max(0, [int]($c1.G * 0.8))
-        $darkerB = [Math]::Max(0, [int]($c1.B * 0.8))
-        $c2 = [System.Drawing.Color]::FromArgb(255, $darkerR, $darkerG, $darkerB)
+        $c2 = [System.Drawing.Color]::FromArgb(255, [int]($c1.R * 0.7), [int]($c1.G * 0.7), [int]($c1.B * 0.7))
         
         $brush = New-Object System.Windows.Media.LinearGradientBrush
         $brush.StartPoint = "0,0"; $brush.EndPoint = "1,1"
@@ -441,8 +415,9 @@ function Update-AppAccent {
         Set-GlobalBrush "AccentBlue" $hex
         $Global:BtnAdd.Background = $brush
         
-        # Luôn giữ text trắng trên accent button để đảm bảo contrast
-        Set-GlobalBrush "TextOnAccent" "#FFFFFF"
+        $lum = (0.299 * $c1.R + 0.587 * $c1.G + 0.114 * $c1.B)
+        if ($lum -gt 150) { Set-GlobalBrush "TextOnAccent" "#000000" }
+        else { Set-GlobalBrush "TextOnAccent" "#FFFFFF" }
     } catch { }
 }
 
@@ -755,8 +730,8 @@ function Update-AppUIList {
         [System.Windows.Controls.Grid]::SetColumn($scBtn, 1)
         
         $delBorder = New-Object System.Windows.Controls.Border
-        $delBorder.Background = [System.Windows.Media.Brushes]::Transparent; $delBorder.CornerRadius = 8
-        $delBorder.Width = 26; $delBorder.Height = 26; $delBorder.Cursor = [Windows.Input.Cursors]::Hand
+        $delBorder.Background = [System.Windows.Media.Brushes]::White; $delBorder.CornerRadius = 8
+        $delBorder.Width = 24; $delBorder.Height = 24; $delBorder.Cursor = [Windows.Input.Cursors]::Hand
         $delBorder.HorizontalAlignment = "Center"; $delBorder.VerticalAlignment = "Center"
         [System.Windows.Controls.Grid]::SetColumn($delBorder, 2)
         
@@ -865,8 +840,8 @@ function Update-AppUIList {
         $statusPanel.Children.Add($statusDot); $statusPanel.Children.Add($statusLabel)
 
         $launchBtn = New-Object System.Windows.Controls.Button
-        $launchBtn.Content = "▶  MỞ TÀI KHOẢN"; $launchBtn.Style = $Global:window.Resources["AccentBtn"]
-        $launchBtn.Tag = $name; $launchBtn.Width = 270; $launchBtn.Height = 38; $launchBtn.FontSize = 13
+        $launchBtn.Content = "MỞ TÀI KHOẢN"; $launchBtn.Style = $Global:window.Resources["RoundBtn"]
+        $launchBtn.Tag = $name; $launchBtn.Width = 270
         $launchBtn.Add_Click({
             $btn = $this
             $originalText = $btn.Content
@@ -1030,55 +1005,7 @@ $Global:RefreshTimer.Interval = [TimeSpan]::FromSeconds(5)
 $Global:RefreshTimer.Add_Tick({ Refresh-StatusOnly })
 $Global:RefreshTimer.Start()
 
-# --- KIỂM TRA DONATE TRƯỚC KHI MỞ TRANG ---
-$donateStatusFile = Join-Path $Global:AppPath "donate_status.json"
-$shouldShowDonate = $true
-
-# Lấy HWID máy hiện tại
-$donateHWID = "UNKNOWN"
-try {
-    $donateHWID = (Get-CimInstance Win32_ComputerSystemProduct -ErrorAction SilentlyContinue).UUID
-    if (-not $donateHWID) {
-        $donateHWID = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Cryptography" -Name "MachineGuid" -ErrorAction SilentlyContinue).MachineGuid
-    }
-} catch {}
-
-if ($donateHWID -and $donateHWID -ne "UNKNOWN") {
-    # Bước 1: Kiểm tra cache local trước (tránh call API mỗi lần mở app)
-    if (Test-Path $donateStatusFile) {
-        try {
-            $donateCache = Get-Content $donateStatusFile -Raw -Encoding UTF8 | ConvertFrom-Json
-            if ($donateCache.hwid -eq $donateHWID -and $donateCache.donated -eq $true) {
-                $shouldShowDonate = $false
-            }
-        } catch {}
-    }
-
-    # Bước 2: Nếu chưa có cache → kiểm tra API (chạy ngầm, không chặn UI)
-    if ($shouldShowDonate) {
-        try {
-            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-            $checkUrl = "https://donate-api.truong-it.workers.dev/hwid/check?id=$donateHWID"
-            $apiResponse = Invoke-RestMethod -Uri $checkUrl -Method Get -TimeoutSec 5 -ErrorAction SilentlyContinue
-            if ($apiResponse -and $apiResponse.donated -eq $true) {
-                $shouldShowDonate = $false
-                # Cache kết quả để lần sau không cần gọi API
-                $cacheData = @{ hwid = $donateHWID; donated = $true; checked_at = (Get-Date -Format "yyyy-MM-ddTHH:mm:ss") }
-                $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-                [System.IO.File]::WriteAllText($donateStatusFile, ($cacheData | ConvertTo-Json -Compress), $utf8NoBom)
-            }
-        } catch {
-            # API lỗi → vẫn hiện donate (an toàn)
-        }
-    }
-
-    if ($shouldShowDonate) {
-        Start-Process "https://d.truong.it/donate?hwid=$donateHWID" -ErrorAction SilentlyContinue | Out-Null
-    }
-} else {
-    # Không lấy được HWID → mở donate bình thường
-    Start-Process "https://d.truong.it/donate" -ErrorAction SilentlyContinue | Out-Null
-}
-
 $Global:window.ShowDialog() | Out-Null
 $Global:RefreshTimer.Stop()
+
+# Bản quyền thuộc về truong.it - Tác giả: truong.it
