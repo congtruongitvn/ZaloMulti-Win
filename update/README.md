@@ -1,16 +1,16 @@
-# 🚀 ZalỏMulti - Quản lý đa tài khoản Zalo Desktop
+# 🚀 ZalỏMulti — Quản lý đa tài khoản Zalo Desktop
 
 <p align="center">
-  <img src="Assets/zalo_01_Do.ico" width="64" height="64" alt="ZaloMulti" />
+  <img src="Assets/zalo.png" width="80" height="80" alt="ZaloMulti" />
 </p>
 
 <p align="center">
-  <strong>Nguyễn Công Trường</strong><br>
-  Digital Marketing Specialist · Retail Operations · Open Source Developer
+  <strong>Mở nhiều tài khoản Zalo cùng lúc trên 1 máy tính</strong><br>
+  Miễn phí · Gọn nhẹ · Không cần cài đặt
 </p>
 
 <p align="center">
-  <a href="https://nct88.github.io/portfolio/">🌐 Portfolio</a> ·
+  <a href="https://nct88.github.io/ZaloMulti-Win/">🌐 Trang chủ</a> ·
   <a href="https://d.truong.it/donate">❤️ Ủng hộ</a> ·
   <a href="https://t.me/congtruongit">💬 Telegram</a> ·
   <a href="https://fb.me/congtruongit">📘 Facebook</a>
@@ -18,48 +18,156 @@
 
 ---
 
-**ZalỏMulti** là một công cụ mạnh mẽ, gọn nhẹ và thẩm mỹ dành cho người dùng Windows, giúp quản lý và chạy đồng thời nhiều tài khoản Zalo Desktop trên cùng một máy tính một cách dễ dàng.
+## 📥 Tải về & Cài đặt (3 bước)
 
+### Bước 1: Tải về
 
+👉 **[Nhấn vào đây để tải ZaloMulti](https://github.com/nct88/ZaloMulti-Win/archive/refs/heads/main.zip)**
+
+### Bước 2: Giải nén
+
+1. Tìm file **`ZaloMulti-Win-main.zip`** vừa tải trong thư mục `Downloads`
+2. **Chuột phải** vào file → chọn **"Extract All..."** (Giải nén tất cả)
+3. Chọn vị trí lưu (ví dụ: **Desktop** hoặc **ổ D:**) → nhấn **Extract**
+
+> ⚠️ **Quan trọng**: Nếu không giải nén được hoặc bị chặn, chuột phải vào file `.zip` → **Properties** → tick ✅ **Unblock** → OK, rồi giải nén lại.
+
+### Bước 3: Khởi chạy
+
+Mở thư mục vừa giải nén → **nhấn đúp vào file `ZaloMulti.exe`** để chạy.
+
+```
+📁 ZaloMulti-Win-main/
+├── 🟢 ZaloMulti.exe     ← NHẤN ĐÚP FILE NÀY ĐỂ CHẠY
+├── 📄 ZaloMulti.ps1      (mã nguồn - không cần mở)
+├── 📄 ZaloMulti.xaml      (giao diện - không cần mở)
+├── 📁 Assets/             (icon, font)
+├── 📁 docs/               (trang web giới thiệu)
+└── 📁 update/             (tự động cập nhật)
+```
+
+> 💡 **Mẹo**: Bạn có thể di chuyển cả thư mục đến bất kỳ vị trí nào trên máy. App chạy portable, không cần cài đặt.
+
+---
+
+## 🎯 Hướng dẫn sử dụng
+
+### Thêm tài khoản Zalo mới
+
+1. Nhấn nút **"+ Thêm tài khoản"** (nút xanh phía trên)
+2. Đặt tên cho tài khoản (ví dụ: "Cá nhân", "Công việc", "Shop")
+3. Nhấn **OK** → tài khoản mới xuất hiện trong danh sách
+
+### Mở tài khoản Zalo
+
+1. Tìm thẻ tài khoản trong danh sách
+2. Nhấn nút **"▶ MỞ TÀI KHOẢN"**
+3. Zalo sẽ mở ra → đăng nhập bằng QR hoặc số điện thoại
+4. Lần sau mở lại sẽ **tự động đăng nhập** (không cần quét QR lại)
+
+### Tạo lối tắt ngoài Desktop
+
+- Nhấn nút **🔗** trên thẻ tài khoản → tạo shortcut ngoài Desktop
+- Lần sau chỉ cần nhấn đúp shortcut để mở thẳng Zalo, không cần mở app
+
+### Sao lưu & Khôi phục
+
+- **📦 Sao lưu**: Nhấn nút "Sao lưu" → chọn tài khoản → lưu file `.zlp`
+- **📥 Khôi phục**: Nhấn nút "Khôi phục" → chọn file `.zlp` → nhập tên mới
+
+### Đóng tất cả Zalo
+
+- Nhấn nút **"✕ Đóng tất cả Zalo"** ở góc dưới phải
+- Chỉ đóng các tài khoản clone, **giữ nguyên Zalo chính** của bạn
+
+### Đổi giao diện
+
+- Nhấn **☀️** để chuyển sang giao diện Sáng
+- Nhấn **🌙** để chuyển sang giao diện Tối
+
+---
 
 ## ✨ Tính năng nổi bật
 
-- **Quản lý không giới hạn**: Thêm, xóa và đặt tên cho từng tài khoản Zalo riêng biệt.
-- **Dữ liệu độc lập**: Mỗi tài khoản hoạt động trong một môi trường (Profile) riêng, không lo bị đăng xuất hoặc chồng chéo dữ liệu.
-- **Giao diện hiện đại (Modern UI)**: Thiết kế chuẩn Glassmorphism, hỗ trợ Chế độ Sáng (Light) và Tối (Dark).
-- **Shortcut tiện lợi**: Tự động tạo biểu tượng ngoài Desktop cho từng tài khoản để truy cập nhanh.
-- **Cập nhật tự động**: Tự kiểm tra và thông báo khi có phiên bản mới từ GitHub.
-- **Đóng nhanh**: Chức năng đóng tất cả các phiên làm việc Zalo chỉ với 1 cú click.
+| Tính năng | Mô tả |
+|-----------|-------|
+| 🔓 Không giới hạn tài khoản | Thêm bao nhiêu tài khoản tùy thích |
+| 🔒 Dữ liệu độc lập | Mỗi tài khoản có dữ liệu riêng, không chồng chéo |
+| 🎨 Giao diện hiện đại | Dark/Light mode, thiết kế macOS-style |
+| 🔗 Shortcut Desktop | Mở thẳng từng tài khoản từ Desktop |
+| 🔄 Cập nhật tự động | Tự kiểm tra & cập nhật khi có phiên bản mới |
+| 📦 Sao lưu & Khôi phục | Chuyển dữ liệu giữa các máy tính |
+| 📱 Lưu số ĐT | Ghi chú số điện thoại cho từng tài khoản |
+
+---
 
 ## 🛠 Yêu cầu hệ thống
 
-- **Hệ điều hành**: Windows 10/11.
-- **Zalo Desktop**: Đã cài đặt phiên bản chính thức từ [Zalo.me](https://zalo.me/pc).
-- **PowerShell**: Phiên bản 5.1 trở lên (có sẵn trên Windows).
+| Yêu cầu | Chi tiết |
+|----------|----------|
+| Hệ điều hành | Windows 10 / 11 |
+| Zalo Desktop | Đã cài đặt từ [zalo.me/pc](https://zalo.me/pc) |
+| Dung lượng | ~2 MB (portable, không cần cài) |
 
-## 🚀 Hướng dẫn sử dụng
+---
 
-1. **Tải về**: Tải toàn bộ thư mục từ [GitHub](https://github.com/nct88/ZaloMulti-Win/archive/refs/heads/main.zip).
-2. **Khởi chạy**: Nhấn đúp vào file `ZaloMulti.exe`.
-3. **Thêm tài khoản**: Nhấn "Thêm tài khoản", nhập tên và bắt đầu sử dụng.
-4. **Mở Zalo**: Nhấn "MỞ TÀI KHOẢN" trên thẻ tương ứng.
+## ❓ Xử lý sự cố thường gặp
+
+<details>
+<summary><strong>❌ Nhấn đúp ZaloMulti.exe nhưng không có gì xảy ra</strong></summary>
+
+1. Chuột phải vào file `.zip` gốc → **Properties** → tick **Unblock** → OK
+2. Giải nén lại
+3. Thử chạy lại `ZaloMulti.exe`
+
+Nếu vẫn không được, mở **PowerShell** và chạy:
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+</details>
+
+<details>
+<summary><strong>❌ Hiện lỗi ký tự lạ / lỗi cú pháp</strong></summary>
+
+File bị sai encoding. Mở `ZaloMulti.ps1` bằng **Notepad** hoặc **VS Code** → **Save As** → chọn Encoding: **UTF-8 with BOM** → lưu đè.
+</details>
+
+<details>
+<summary><strong>❌ Mở Zalo bị lỗi "Failed to get appData"</strong></summary>
+
+Xóa thư mục profile bị lỗi trong `C:\Zalo_Clone_Profiles\[Tên tài khoản]`, rồi tạo lại tài khoản mới trong app.
+</details>
+
+<details>
+<summary><strong>❌ Không gõ được tiếng Việt trong Zalo clone</strong></summary>
+
+Khởi động lại bộ gõ (Unikey/EVKey). Nếu vẫn lỗi, thử chuyển sang EVKey.
+</details>
+
+<details>
+<summary><strong>❌ Tin nhắn không đồng bộ</strong></summary>
+
+Sau khi đăng nhập lần đầu, cần đợi 5–10 phút để Zalo đồng bộ dữ liệu. Không tắt Zalo trong thời gian này.
+</details>
+
+---
 
 ## 📂 Cấu trúc dự án
 
-- **`ZaloMulti.ps1`**: Mã nguồn chính (PowerShell)
-- **`ZaloMulti.xaml`**: Giao diện người dùng (WPF)
-- **`ZaloMulti.exe`**: File khởi động nhanh
-- **`CHANGELOG.md`**: Nhật ký phiên bản
-- **`docs/`**: Trang giới thiệu (GitHub Pages)
-- **`Assets/`**: Tài nguyên (Font, Icon, Images)
+```
+ZaloMulti-Win/
+├── ZaloMulti.exe          # File khởi động (nhấn đúp để chạy)
+├── ZaloMulti.ps1          # Mã nguồn chính (PowerShell)
+├── ZaloMulti.xaml          # Giao diện (WPF XAML)
+├── version.txt            # Phiên bản hiện tại
+├── changelog.txt          # Ghi chú cập nhật
+├── update.zip             # Gói cập nhật tự động
+├── Assets/                # Icons, fonts, images
+├── docs/                  # GitHub Pages
+└── update/                # Bản cập nhật cho người dùng
+```
 
-## ❓ Xử lý sự cố
-
-- **Lỗi ký tự lạ / cú pháp**: Mở `ZaloMulti.ps1` → Save As → Encoding **UTF-8 with BOM**.
-- **Không chạy được**: Chuột phải vào file `.zip` tải về → Properties → tick **Unblock** → OK.
-- **Lỗi quyền thực thi**: Chạy lệnh `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` trong cửa sổ PowerShell.
-- **Không gõ được tiếng Việt**: Khởi động lại Unikey hoặc chuyển sang phần mềm EVKey.
-- **Đồng bộ tin nhắn chậm**: Đợi 5–10 phút sau đăng nhập, không tắt Zalo giữa chừng.
+---
 
 ## 📋 Nhật ký phiên bản
 
@@ -67,21 +175,25 @@ Xem chi tiết tất cả các thay đổi qua từng phiên bản:
 
 👉 **[CHANGELOG.md](CHANGELOG.md)** · **[Xem trên trang giới thiệu](https://nct88.github.io/ZaloMulti-Win/#changelog)**
 
-## 🤝 Đóng góp & Liên hệ
+---
+
+## 🤝 Liên hệ & Đóng góp
 
 Nếu bạn thấy công cụ này hữu ích, hãy để lại một **Star** ⭐ trên GitHub!
 
-- 🌐 **Website**: [truong.it](https://truong.it)
-- 💬 **Telegram**: [@congtruongit](https://t.me/congtruongit)
-- 📘 **Facebook**: [congtruongit](https://fb.me/congtruongit)
-- 🐙 **GitHub**: [nct88](https://github.com/nct88)
+| Kênh | Link |
+|------|------|
+| 🌐 Website | [truong.it](https://truong.it) |
+| 💬 Telegram | [@congtruongit](https://t.me/congtruongit) |
+| 📘 Facebook | [congtruongit](https://fb.me/congtruongit) |
+| 🐙 GitHub | [nct88](https://github.com/nct88) |
 
 ---
 
 ### ❤️ Ủng hộ
 
-Nếu bạn thấy dự án hữu ích, hãy cân nhắc [ủng hộ truong.it](https://d.truong.it/donate) để tôi tiếp tục tạo ra những sản phẩm giá trị cho cộng đồng.
+Nếu bạn thấy dự án hữu ích, hãy cân nhắc [ủng hộ truong.it](https://d.truong.it/donate) để tôi tiếp tục phát triển những sản phẩm giá trị cho cộng đồng.
 
 ---
 
-*Bản quyền © 2026 bởi truong.it. Phát triển với đam mê.*
+*Bản quyền © 2026 bởi [truong.it](https://truong.it). Phát triển với ❤️*

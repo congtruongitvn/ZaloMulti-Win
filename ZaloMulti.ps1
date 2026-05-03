@@ -171,7 +171,6 @@ if ($launchIdx -ge 0) {
                 $randomHash = [System.Guid]::NewGuid().ToString("n")
                 "$randomPart1.$timestamp.$randomHash" | Set-Content $zuFile -Force -Encoding ASCII
             }
-            # [REMOVED v2.0.4] Zalo tu tao device identity
             $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
             $configPath = Join-Path $zaloDataPath "config.json"
@@ -181,6 +180,7 @@ if ($launchIdx -ge 0) {
                 [System.IO.File]::WriteAllText($configPath, $configContent, $utf8NoBom)
             }
 
+            # Launch Zalo với ProcessStartInfo (FAST PATH — exit sau khi launch, không cần async)
             $processInfo = New-Object System.Diagnostics.ProcessStartInfo
             $processInfo.FileName = $Global:ZaloPath
             $processInfo.UseShellExecute = $false
@@ -188,20 +188,18 @@ if ($launchIdx -ge 0) {
             $processInfo.EnvironmentVariables["APPDATA"] = $roamingPath
             $processInfo.EnvironmentVariables["LOCALAPPDATA"] = $localPath
             try {
-                # Ghi nhan PID Zalo hien co TRUOC khi mo
-        $existingPids = @()
-        $existingProcs = Get-Process -Name "Zalo" -ErrorAction SilentlyContinue
-        if ($existingProcs) { $existingPids = @($existingProcs | ForEach-Object { $_.Id }) }
+                $existingPids = @()
+                $existingProcs = Get-Process -Name "Zalo" -ErrorAction SilentlyContinue
+                if ($existingProcs) { $existingPids = @($existingProcs | ForEach-Object { $_.Id }) }
 
-        $proc = [System.Diagnostics.Process]::Start($processInfo)
-                if ($proc) { # Cho Electron spawn child processes (3 giay)
+                $proc = [System.Diagnostics.Process]::Start($processInfo)
                 Start-Sleep -Milliseconds 3000
                 $allProcs = Get-Process -Name "Zalo" -ErrorAction SilentlyContinue
                 $newPids = @()
                 if ($allProcs) { $newPids = @($allProcs | Where-Object { $_.Id -notin $existingPids } | ForEach-Object { $_.Id }) }
                 $pidPath = Join-Path $profilePath "pid.txt"
                 if ($newPids.Count -gt 0) { ($newPids -join ",") | Set-Content $pidPath -Force -Encoding ASCII }
-                else { $proc.Id | Set-Content $pidPath -Force -Encoding ASCII } }
+                else { $proc.Id | Set-Content $pidPath -Force -Encoding ASCII }
             } catch { }
         }
         exit
@@ -521,12 +519,9 @@ function Start-ZaloInstance {
         $randomPart1 = -join ((1..19) | ForEach-Object { Get-Random -Minimum 0 -Maximum 10 })
         $timestamp = [DateTimeOffset]::Now.ToUnixTimeMilliseconds()
         $randomHash = [System.Guid]::NewGuid().ToString("n")
-        $zuContent = "$randomPart1.$timestamp.$randomHash"
-        $zuContent | Set-Content $zuFile -Force -Encoding ASCII
+        "$randomPart1.$timestamp.$randomHash" | Set-Content $zuFile -Force -Encoding ASCII
     }
 
-    # [REMOVED v2.0.4] Khong tao storage.json - Zalo tu tao device identity
-    # [REMOVED v2.0.4] Zalo tu tao device identity - khong can tao storage.json
 
     $configPath = Join-Path $zaloDataPath "config.json"
     if (-not (Test-Path $configPath)) {
@@ -536,34 +531,44 @@ function Start-ZaloInstance {
         [System.IO.File]::WriteAllText($configPath, $configContent, $utf8NoBom)
     }
 
+    # Ghi nhận PID Zalo hiện có TRƯỚC khi mở
+    $existingPids = @()
+    $existingProcs = Get-Process -Name "Zalo" -ErrorAction SilentlyContinue
+    if ($existingProcs) { $existingPids = @($existingProcs | ForEach-Object { $_.Id }) }
+
+    # Launch Zalo với env vars riêng
     $processInfo = New-Object System.Diagnostics.ProcessStartInfo
     $processInfo.FileName = $Global:ZaloPath
     $processInfo.UseShellExecute = $false
     $processInfo.EnvironmentVariables["USERPROFILE"] = $profilePath
     $processInfo.EnvironmentVariables["APPDATA"] = $roamingPath
     $processInfo.EnvironmentVariables["LOCALAPPDATA"] = $localPath
-    
-    try {
-        # Ghi nhan PID Zalo hien co TRUOC khi mo
-        $existingPids = @()
-        $existingProcs = Get-Process -Name "Zalo" -ErrorAction SilentlyContinue
-        if ($existingProcs) { $existingPids = @($existingProcs | ForEach-Object { $_.Id }) }
 
+    try {
         $proc = [System.Diagnostics.Process]::Start($processInfo)
-        # Lưu PID để theo dõi trạng thái
-        if ($proc) {
-            # Cho Electron spawn child processes (3 giay)
-                Start-Sleep -Milliseconds 3000
-                $allProcs = Get-Process -Name "Zalo" -ErrorAction SilentlyContinue
-                $newPids = @()
-                if ($allProcs) { $newPids = @($allProcs | Where-Object { $_.Id -notin $existingPids } | ForEach-Object { $_.Id }) }
-                $pidPath = Join-Path $profilePath "pid.txt"
-                if ($newPids.Count -gt 0) { ($newPids -join ",") | Set-Content $pidPath -Force -Encoding ASCII }
-                else { $proc.Id | Set-Content $pidPath -Force -Encoding ASCII }
-        }
     } catch {
         [System.Windows.MessageBox]::Show("Không thể khởi chạy Zalo: $($_.Exception.Message)", "Lỗi", 0, 16)
+        return
     }
+
+    # Timer nhẹ: chờ 4 giây rồi track PID mới (KHÔNG block UI)
+    $pidTimer = New-Object System.Windows.Threading.DispatcherTimer
+    $pidTimer.Interval = [TimeSpan]::FromSeconds(4)
+    $pidTimer.Tag = @{ Profile = $profilePath; OldPids = $existingPids; InitPid = $proc.Id }
+    $pidTimer.Add_Tick({
+        $this.Stop()
+        $info = $this.Tag
+        try {
+            $allProcs = Get-Process -Name "Zalo" -ErrorAction SilentlyContinue
+            $newPids = @()
+            if ($allProcs) { $newPids = @($allProcs | Where-Object { $_.Id -notin $info.OldPids } | ForEach-Object { $_.Id }) }
+            $pidPath = Join-Path $info.Profile "pid.txt"
+            if ($newPids.Count -gt 0) { ($newPids -join ",") | Set-Content $pidPath -Force -Encoding ASCII }
+            else { $info.InitPid | Set-Content $pidPath -Force -Encoding ASCII }
+        } catch { }
+        Update-AppUIList
+    })
+    $pidTimer.Start()
 }
 
 # Kiểm tra trạng thái tài khoản (đang mở hay đã đóng)
@@ -840,8 +845,18 @@ function Update-AppUIList {
         $phoneBox.FontSize = 11; $phoneBox.Tag = $profileDir; $phoneBox.VerticalAlignment = "Center"
         $phoneBox.SetResourceReference([System.Windows.Controls.TextBox]::ForegroundProperty, "TextSec")
         [System.Windows.Controls.Grid]::SetColumn($phoneBox, 1)
+        $phoneBox.Add_GotFocus({
+            if ($this.Text -eq "Nhập số ĐT tài khoản này") {
+                $this.Text = ""
+                $this.CaretIndex = 0
+            }
+        })
         $phoneBox.Add_LostFocus({
-            $this.Text.Trim() | Set-Content (Join-Path $this.Tag "phone.txt") -Force -Encoding UTF8
+            if ([string]::IsNullOrWhiteSpace($this.Text)) {
+                $this.Text = "Nhập số ĐT tài khoản này"
+            } else {
+                $this.Text.Trim() | Set-Content (Join-Path $this.Tag "phone.txt") -Force -Encoding UTF8
+            }
         })
         $grid.Children.Add($phonePrefix); $grid.Children.Add($phoneBox)
 
