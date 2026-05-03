@@ -25,7 +25,7 @@ trap {
 }
 
 # Cấu hình toàn cầu
-$Global:Version = "2.0.8" # Sửa nút đóng tất cả giữ Zalo gốc, kiểm tra donate HWID
+$Global:Version = "2.0.9" # Fix PID tracking, dọn dead code, README mới
 $Global:AppPath = $PSScriptRoot
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 

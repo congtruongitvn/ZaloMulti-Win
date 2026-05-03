@@ -4,6 +4,19 @@ Tất cả thay đổi đáng chú ý của dự án được ghi lại tại đ
 
 ---
 
+## v2.0.9 — 03/05/2026
+
+- **Sửa lỗi PID tracking**: Khắc phục bug `$existingPids` chưa được khai báo trong bản update, gây sai trạng thái tài khoản.
+- **Dọn dẹp mã nguồn**: Loại bỏ dead code và comment thừa `[REMOVED v2.0.4]`.
+- **Cập nhật README**: Viết lại hoàn toàn hướng dẫn sử dụng cho người mới — chỉ rõ file nào cần chạy, từng bước tải + giải nén + khởi chạy.
+- **Đóng gói EXE mới**: Rebuild `ZaloMulti.exe` với phiên bản mới nhất.
+
+## v2.0.8 — 03/05/2026
+
+- Nút "Đóng tất cả" chỉ đóng Zalo clone, giữ nguyên Zalo gốc
+- Kiểm tra donate theo HWID, không hiện lại nếu đã ủng hộ
+- Tối ưu hiệu năng khởi động
+
 ## v2.0.7 — 01/05/2026
 
 - **Làm mới giao diện (macOS Style)**: Tinh chỉnh lại toàn bộ bảng màu nền, đổi nút `Đóng ứng dụng` thành 3 nút tròn điều khiển (Close, Minimize, Maximize) mang hơi hướng macOS.

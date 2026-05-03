@@ -1,3 +1,4 @@
-- Nút "Đóng tất cả" chỉ đóng Zalo clone, giữ nguyên Zalo gốc
-- Kiểm tra donate theo HWID, không hiện lại nếu đã ủng hộ
-- Tối ưu hiệu năng khởi động
+- Sửa lỗi PID tracking gây sai trạng thái tài khoản
+- Dọn dẹp mã nguồn, loại bỏ dead code
+- Viết lại README hướng dẫn chi tiết cho người mới
+- Đóng gói EXE mới phiên bản 2.0.9
