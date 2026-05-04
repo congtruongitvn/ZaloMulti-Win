@@ -25,8 +25,13 @@ trap {
 }
 
 # Cấu hình toàn cầu
-$Global:Version = "2.0.9" # Fix PID tracking, dọn dead code, README mới
-$Global:AppPath = $PSScriptRoot
+$Global:Version = "2.1.0" # Fix crash EXE, thêm icon, đồng bộ màu nút theo theme
+# Khi chạy từ ps2exe (.exe), $PSScriptRoot rỗng → fallback sang đường dẫn exe
+if ($PSScriptRoot -and $PSScriptRoot -ne "") {
+    $Global:AppPath = $PSScriptRoot
+} else {
+    $Global:AppPath = [System.IO.Path]::GetDirectoryName([System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName)
+}
 $Global:IconFolder = Join-Path $Global:AppPath "Assets"
 
 # Fix lỗi load font do đường dẫn chứa khoảng trắng (nguyên nhân gây crash XAML)
@@ -391,6 +396,8 @@ function Set-AppTheme {
             $Global:ThemeIndicator.RenderTransform.BeginAnimation([System.Windows.Media.TranslateTransform]::XProperty, $anim)
             $Global:BtnDark.Foreground = [System.Windows.Media.Brushes]::White
             $Global:BtnLight.Foreground = $Global:window.Resources["TextSec"]
+            # Đồng bộ accent buttons theo theme: Dark = xanh
+            Update-AppAccent "#007AFF" $isInitial
         } else {
             # macOS Light Mode palette
             Set-GlobalBrush "BgDark" "#F5F5F7"
@@ -414,6 +421,8 @@ function Set-AppTheme {
             $Global:ThemeIndicator.RenderTransform.BeginAnimation([System.Windows.Media.TranslateTransform]::XProperty, $anim)
             $Global:BtnLight.Foreground = [System.Windows.Media.Brushes]::White
             $Global:BtnDark.Foreground = $Global:window.Resources["TextSec"]
+            # Đồng bộ accent buttons theo theme: Light = đỏ
+            Update-AppAccent "#FF3B30" $isInitial
         }
     } catch { }
 }

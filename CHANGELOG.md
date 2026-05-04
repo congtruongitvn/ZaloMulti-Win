@@ -4,6 +4,12 @@ Tất cả thay đổi đáng chú ý của dự án được ghi lại tại đ
 
 ---
 
+## v2.1.0 — 04/05/2026
+
+- **Sửa lỗi crash khi khởi động từ EXE**: Khắc phục lỗi `Cannot bind argument to parameter 'Path'` do `$PSScriptRoot` trả về chuỗi rỗng khi chạy từ file `.exe` (ps2exe). Thêm fallback tự phát hiện đường dẫn exe.
+- **Thêm biểu tượng cho file EXE**: Gán icon Zalo xanh dương cho `ZaloMulti.exe`, hiển thị đẹp hơn trong Explorer và Taskbar.
+- **Đồng bộ màu nút theo chế độ giao diện**: Chế độ Sáng → nút đỏ chữ trắng, Chế độ Tối → nút xanh chữ trắng. Áp dụng cho tất cả nút chính (Thêm TK, Mở TK, Đóng tất cả).
+
 ## v2.0.9 — 03/05/2026
 
 - **Sửa lỗi PID tracking**: Khắc phục bug `$existingPids` chưa được khai báo trong bản update, gây sai trạng thái tài khoản.

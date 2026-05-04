@@ -1,4 +1,4 @@
-- Sửa lỗi PID tracking gây sai trạng thái tài khoản
-- Dọn dẹp mã nguồn, loại bỏ dead code
-- Viết lại README hướng dẫn chi tiết cho người mới
-- Đóng gói EXE mới phiên bản 2.0.9
+- Sửa lỗi crash khi khởi động từ file EXE ($PSScriptRoot rỗng)
+- Thêm biểu tượng Zalo cho file EXE
+- Đồng bộ màu nút theo chế độ: Sáng = đỏ, Tối = xanh
+- Đóng gói EXE mới phiên bản 2.1.0
